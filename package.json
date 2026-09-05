@@ -1,5 +1,5 @@
 {
-  "name": "quick-commander",
+  "name": "vscode-quick-commander",
   "displayName": "Quick Commander",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
   "version": "0.0.1",
