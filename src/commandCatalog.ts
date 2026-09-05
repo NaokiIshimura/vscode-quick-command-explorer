@@ -5,6 +5,12 @@ import {
 } from './types';
 
 /**
+ * ID of the VSCode command that opens the integrated browser.
+ * It accepts either a URL string or an options object.
+ */
+export const INTEGRATED_BROWSER_COMMAND_ID = 'workbench.action.browser.open';
+
+/**
  * Built-in command definitions.
  *
  * Listed in ascending order by command name (label). The actual display order
@@ -28,11 +34,28 @@ export const BUILT_IN_COMMANDS: readonly CommandDefinition[] = [
     platforms: ['darwin'],
   },
   {
-    id: 'workbench.action.browser.open',
+    id: INTEGRATED_BROWSER_COMMAND_ID,
     label: 'Open Integrated Browser',
     category: CommandCategory.Browser,
     description: 'Open the integrated browser',
     icon: 'globe',
+  },
+  {
+    id: 'quickCommander.openRepositoryOnGitHub',
+    label: 'Open Repository on GitHub',
+    category: CommandCategory.Browser,
+    description:
+      'Open the page of the current repository remote in the external browser',
+    icon: 'github',
+  },
+  {
+    id: 'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
+    label: 'Open Repository on GitHub in Integrated Browser',
+    category: CommandCategory.Browser,
+    description:
+      'Open the page of the current repository remote in the integrated browser',
+    icon: 'globe',
+    requires: [INTEGRATED_BROWSER_COMMAND_ID],
   },
 ];
 
