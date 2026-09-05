@@ -176,8 +176,16 @@ User Click
 
 ## Release Process
 
-Releases are automated with GitHub Actions (`.github/workflows/release-vsix.yml`):
+Releases are automated with GitHub Actions. The build is shared by both release workflows
+through a reusable workflow:
 
-1. Runs on a push to `main` or when a release is published
-2. Installs dependencies → compiles → runs the tests → creates the VSIX package
-3. Uploads the `.vsix` file to GitHub Releases
+- `.github/workflows/build-vsix.yml` - reusable workflow (`workflow_call`)
+  1. Installs dependencies → compiles → runs the tests → creates the VSIX package
+  2. Uploads the `.vsix` as a short-lived artifact and exposes the `version` and
+     `vsix-filename` outputs to the calling workflow
+- `.github/workflows/release-vsix.yml` - runs on a push to `main`, when a release is
+  published, or manually; downloads the built artifact and uploads the `.vsix` file to
+  GitHub Releases
+- `.github/workflows/publish-marketplace.yml` - runs on the same events; downloads the
+  built artifact and publishes it with `vsce publish`. It needs the `VSCE_PAT` repository
+  secret; when the secret is missing the publishing step is skipped instead of failing
