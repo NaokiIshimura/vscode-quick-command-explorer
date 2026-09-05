@@ -2,7 +2,7 @@
   "name": "quick-command-explorer",
   "displayName": "Quick Command Explorer",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "nacn",
   "repository": {
     "type": "git",

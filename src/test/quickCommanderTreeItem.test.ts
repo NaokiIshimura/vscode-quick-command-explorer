@@ -99,7 +99,7 @@ describe('SectionTreeItem', () => {
     expect(item.label).toBe('Favorites');
     expect(item.contextValue).toBe('favoritesSection');
     expect((item.iconPath as ThemeIcon).id).toBe('star-full');
-    expect(item.collapsibleState).toBe(TreeItemCollapsibleState.Expanded);
+    expect(item.collapsibleState).toBe(TreeItemCollapsibleState.Collapsed);
   });
 
   it('creates the Recently Used section', () => {
@@ -108,6 +108,7 @@ describe('SectionTreeItem', () => {
     expect(item.label).toBe('Recently Used');
     expect(item.contextValue).toBe('recentSection');
     expect((item.iconPath as ThemeIcon).id).toBe('history');
+    expect(item.collapsibleState).toBe(TreeItemCollapsibleState.Collapsed);
   });
 });
 
