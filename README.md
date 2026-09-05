@@ -9,15 +9,36 @@ Quick Command Explorer instead lets you **pick from a list sorted by command nam
 
 ## Built-in commands
 
-Three commands ship with the extension. They are displayed **in ascending order by command name**.
+Five commands ship with the extension. They are displayed **in ascending order by command name**.
 
 | # | Command name | Command ID | Description |
 | --- | --- | --- | --- |
 | 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | Duplicate the current workspace in a new window |
 | 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | Merge all windows into one (**macOS only**) |
 | 3 | Open Integrated Browser | `workbench.action.browser.open` | Open the integrated browser |
+| 4 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | Open the page of the current repository remote in the external browser |
+| 5 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | Open the same page in the integrated browser |
 
 Use the `quickCommander.customCommands` setting to add more commands.
+
+### Open Repository on GitHub
+
+These two commands are contributed by the extension itself rather than by VSCode.
+
+They read the remote of the repository opened in the current window through the
+Git extension bundled with VSCode, convert the remote URL into an https URL,
+and open it — in the external browser, or in the integrated browser for the
+`in Integrated Browser` variant.
+
+| Step | Behaviour |
+| --- | --- |
+| Repository | The first repository opened in the window |
+| Remote | `origin`, or the first remote that has a URL |
+| URL | The SSH form (`git@github.com:owner/repo.git`) and the scheme form (`https://`, `ssh://`, `git://`) are both converted to `https://host/owner/repo` |
+
+A warning is shown instead of opening a page when the Git extension is
+disabled, when no repository is open, when the repository has no remote, or
+when the remote URL cannot be converted.
 
 ### Availability
 
@@ -27,6 +48,7 @@ Commands that are not available in the current environment are hidden by default
 | --- | --- |
 | Merge All Windows | macOS with `window.nativeTabs` enabled |
 | Open Integrated Browser | A VSCode build that ships the integrated browser (confirmed on 1.136 and later) |
+| Open Repository on GitHub in Integrated Browser | Same as above, because it hands the URL to `workbench.action.browser.open` |
 
 Enable `quickCommander.showUnavailableCommands` to show them anyway, marked with a warning icon.
 

@@ -88,6 +88,8 @@ describe('root (flat view)', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
     ]);
   });
 
@@ -99,7 +101,7 @@ describe('root (flat view)', () => {
 
     expect(children[0]).toBeInstanceOf(SectionTreeItem);
     expect(children[0].label).toBe('Favorites');
-    expect(children).toHaveLength(4);
+    expect(children).toHaveLength(6);
   });
 
   it('shows the Recently Used section when there is history', async () => {
@@ -160,6 +162,8 @@ describe('root (flat view)', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
       'Zen Mode',
     ]);
   });
@@ -174,6 +178,8 @@ describe('root (flat view)', () => {
     expect(labelsOf(provider.getChildren())).toEqual([
       'Duplicate As Workspace in New Window',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
     ]);
   });
 
@@ -192,7 +198,7 @@ describe('root (flat view)', () => {
     const { provider } = await createProvider();
     const children = provider.getChildren() as CommandTreeItem[];
 
-    expect(children).toHaveLength(3);
+    expect(children).toHaveLength(5);
     expect(children.every((child) => child.isAvailable === false)).toBe(true);
   });
 });
@@ -233,6 +239,8 @@ describe('root (category view)', () => {
 
     expect(labelsOf(provider.getChildren(category))).toEqual([
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
     ]);
   });
 

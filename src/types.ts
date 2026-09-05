@@ -4,7 +4,7 @@
  * quickCommander.visibleCategories setting.
  */
 export enum CommandCategory {
-  /** Integrated browser related */
+  /** Browser related */
   Browser = 'browser',
   /** Workspace related */
   Workspace = 'workspace',
@@ -55,6 +55,12 @@ export interface CommandDefinition {
   readonly args?: readonly unknown[];
   /** Platforms the command runs on (process.platform values). All platforms when omitted */
   readonly platforms?: readonly string[];
+  /**
+   * Command IDs that must also be registered in VSCode.
+   * Used by commands this extension contributes itself, because their own ID
+   * is always registered and says nothing about what they depend on
+   */
+  readonly requires?: readonly string[];
   /** Whether to show a confirmation dialog before executing */
   readonly confirm?: boolean;
 }

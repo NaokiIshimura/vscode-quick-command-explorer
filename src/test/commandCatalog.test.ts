@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   BUILT_IN_COMMANDS,
+  INTEGRATED_BROWSER_COMMAND_ID,
   findCommandById,
   getCommandsByCategory,
   getSortedCommands,
@@ -8,8 +9,8 @@ import {
 import { CommandCategory, compareCommandsByLabel } from '../types';
 
 describe('BUILT_IN_COMMANDS', () => {
-  it('contains three built-in commands', () => {
-    expect(BUILT_IN_COMMANDS).toHaveLength(3);
+  it('contains five built-in commands', () => {
+    expect(BUILT_IN_COMMANDS).toHaveLength(5);
   });
 
   it('has no duplicate command IDs', () => {
@@ -28,9 +29,12 @@ describe('BUILT_IN_COMMANDS', () => {
     });
   });
 
-  it('starts every command ID with workbench.action.', () => {
+  it('starts every command ID with a known prefix', () => {
     BUILT_IN_COMMANDS.forEach((command) => {
-      expect(command.id.startsWith('workbench.action.')).toBe(true);
+      expect(
+        command.id.startsWith('workbench.action.') ||
+          command.id.startsWith('quickCommander.')
+      ).toBe(true);
     });
   });
 
@@ -39,6 +43,8 @@ describe('BUILT_IN_COMMANDS', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
     ]);
   });
 
@@ -47,7 +53,17 @@ describe('BUILT_IN_COMMANDS', () => {
       'workbench.action.duplicateWorkspaceInNewWindow',
       'workbench.action.mergeAllWindowTabs',
       'workbench.action.browser.open',
+      'quickCommander.openRepositoryOnGitHub',
+      'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
     ]);
+  });
+
+  it('marks the integrated browser variant as requiring the browser command', () => {
+    const command = findCommandById(
+      'quickCommander.openRepositoryOnGitHubInIntegratedBrowser'
+    );
+
+    expect(command?.requires).toEqual([INTEGRATED_BROWSER_COMMAND_ID]);
   });
 
   it('marks Merge All Windows as macOS only', () => {
@@ -111,7 +127,11 @@ describe('getCommandsByCategory', () => {
   it('returns the commands of the given category', () => {
     expect(
       getCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
-    ).toEqual(['workbench.action.browser.open']);
+    ).toEqual([
+      'workbench.action.browser.open',
+      'quickCommander.openRepositoryOnGitHub',
+      'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
+    ]);
     expect(
       getCommandsByCategory(CommandCategory.Workspace).map((c) => c.id)
     ).toEqual(['workbench.action.duplicateWorkspaceInNewWindow']);

@@ -9,15 +9,34 @@ Quick Command Explorerは**コマンド名の昇順に並んだ一覧から選�
 
 ## 内蔵コマンド
 
-初期状態では以下の3つのコマンドを内蔵しています（**コマンド名の昇順**で表示されます）。
+初期状態では以下の5つのコマンドを内蔵しています（**コマンド名の昇順**で表示されます）。
 
 | # | コマンド名 | コマンドID | 説明 |
 | --- | --- | --- | --- |
 | 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | 現在のワークスペースを新しいウィンドウで複製する |
 | 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | すべてのウィンドウを1つにまとめる（**macOS専用**） |
 | 3 | Open Integrated Browser | `workbench.action.browser.open` | 統合ブラウザを開く |
+| 4 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | 開いているリポジトリのリモートのページを外部ブラウザで開く |
+| 5 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | 同じページを統合ブラウザで開く |
 
 コマンドの追加は `quickCommander.customCommands` 設定から行えます。
+
+### Open Repository on GitHub について
+
+この2つのコマンドはVSCode組み込みのコマンドではなく、本拡張機能が提供するコマンドです。
+
+VSCode組み込みのGit拡張から、現在のウィンドウで開いているリポジトリのリモートを取得し、
+リモートURLをhttps形式に変換して開きます。開き先は外部ブラウザ、
+`in Integrated Browser` の方は統合ブラウザです。
+
+| 項目 | 挙動 |
+| --- | --- |
+| リポジトリ | ウィンドウで最初に開かれているリポジトリ |
+| リモート | `origin`、無ければURLを持つ最初のリモート |
+| URL | SSH形式（`git@github.com:owner/repo.git`）とスキーム形式（`https://` / `ssh://` / `git://`）のいずれも `https://host/owner/repo` に変換します |
+
+Git拡張が無効な場合、リポジトリを開いていない場合、リモートが未設定の場合、
+リモートURLを変換できない場合は、ページを開かずに警告を表示します。
 
 ### 利用可否について
 
@@ -27,6 +46,7 @@ Quick Command Explorerは**コマンド名の昇順に並んだ一覧から選�
 | --- | --- |
 | Merge All Windows | macOSかつ `window.nativeTabs` が有効であること |
 | Open Integrated Browser | 統合ブラウザを搭載したバージョンのVSCode（1.136以降で確認） |
+| Open Repository on GitHub in Integrated Browser | 上と同じ（`workbench.action.browser.open` にURLを渡すため） |
 
 `quickCommander.showUnavailableCommands` を有効にすると、利用できないコマンドも警告アイコン付きで表示されます。
 

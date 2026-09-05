@@ -7,6 +7,8 @@ import { CommandCategory, CommandDefinition } from '../types';
 const BROWSER_ID = 'workbench.action.browser.open';
 const DUPLICATE_ID = 'workbench.action.duplicateWorkspaceInNewWindow';
 const MERGE_ID = 'workbench.action.mergeAllWindowTabs';
+const GITHUB_ID = 'quickCommander.openRepositoryOnGitHub';
+const GITHUB_BROWSER_ID = 'quickCommander.openRepositoryOnGitHubInIntegratedBrowser';
 
 const ALL_BUILT_IN_IDS = BUILT_IN_COMMANDS.map((command) => command.id);
 
@@ -178,6 +180,33 @@ describe('availability checks', () => {
     expect(service.isSupportedPlatform(merge)).toBe(false);
   });
 
+  it('reports a command as unavailable when a required command is missing', async () => {
+    const integratedBrowser = BUILT_IN_COMMANDS.find(
+      (c) => c.id === GITHUB_BROWSER_ID
+    )!;
+
+    expect((await createService()).isAvailable(integratedBrowser)).toBe(true);
+
+    __mockState.availableCommands = ALL_BUILT_IN_IDS.filter(
+      (id) => id !== BROWSER_ID
+    );
+
+    expect((await createService()).isAvailable(integratedBrowser)).toBe(false);
+  });
+
+  it('hides the integrated browser variant without the browser command', async () => {
+    __mockState.availableCommands = ALL_BUILT_IN_IDS.filter(
+      (id) => id !== BROWSER_ID
+    );
+    const service = await createService();
+
+    expect(service.getVisibleCommands().map((c) => c.id)).toEqual([
+      DUPLICATE_ID,
+      MERGE_ID,
+      GITHUB_ID,
+    ]);
+  });
+
   it('always shows commands when showUnavailableCommands is enabled', async () => {
     __mockState.availableCommands = [];
     __mockState.configuration['quickCommander.showUnavailableCommands'] = true;
@@ -196,6 +225,8 @@ describe('getAllCommands / getVisibleCommands', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
     ]);
   });
 
@@ -216,6 +247,8 @@ describe('getAllCommands / getVisibleCommands', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Repository on GitHub',
+      'Open Repository on GitHub in Integrated Browser',
       'Zen Mode',
     ]);
   });
@@ -227,7 +260,7 @@ describe('getAllCommands / getVisibleCommands', () => {
     const service = await createService();
     const commands = service.getAllCommands();
 
-    expect(commands).toHaveLength(3);
+    expect(commands).toHaveLength(5);
     expect(commands.find((c) => c.id === BROWSER_ID)?.label).toBe(
       'Browser (Custom)'
     );
@@ -247,6 +280,8 @@ describe('getAllCommands / getVisibleCommands', () => {
     expect(service.getVisibleCommands().map((c) => c.id)).toEqual([
       DUPLICATE_ID,
       BROWSER_ID,
+      GITHUB_ID,
+      GITHUB_BROWSER_ID,
     ]);
   });
 
@@ -262,7 +297,7 @@ describe('getAllCommands / getVisibleCommands', () => {
 
     expect(
       service.getVisibleCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
-    ).toEqual([BROWSER_ID]);
+    ).toEqual([BROWSER_ID, GITHUB_ID, GITHUB_BROWSER_ID]);
     expect(
       service.getVisibleCommandsByCategory(CommandCategory.Custom)
     ).toEqual([]);

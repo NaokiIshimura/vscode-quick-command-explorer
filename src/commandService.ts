@@ -132,18 +132,24 @@ export class CommandService {
   }
 
   /**
-   * Checks whether a command is registered in VSCode.
+   * Checks whether a command, and every command it requires, is registered in
+   * VSCode.
    * Returns true when the cache has not been loaded yet, since no decision
    * can be made at that point.
    * @param definition Command definition
    * @returns True when the command is registered
    */
   isAvailable(definition: CommandDefinition): boolean {
-    if (!this.availableCommandIds) {
+    const availableCommandIds = this.availableCommandIds;
+
+    if (!availableCommandIds) {
       return true;
     }
 
-    return this.availableCommandIds.has(definition.id);
+    return (
+      availableCommandIds.has(definition.id) &&
+      (definition.requires ?? []).every((id) => availableCommandIds.has(id))
+    );
   }
 
   /**

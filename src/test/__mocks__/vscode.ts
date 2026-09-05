@@ -16,13 +16,23 @@ export class Uri {
   readonly fsPath: string;
   readonly scheme: string;
 
-  private constructor(fsPath: string) {
-    this.fsPath = fsPath;
-    this.scheme = 'file';
+  private constructor(private readonly value: string, scheme: string) {
+    this.fsPath = value;
+    this.scheme = scheme;
   }
 
   static file(path: string): Uri {
-    return new Uri(path);
+    return new Uri(path, 'file');
+  }
+
+  static parse(value: string): Uri {
+    const scheme = /^([a-z][a-z\d+.-]*):/i.exec(value);
+
+    return new Uri(value, scheme ? scheme[1] : '');
+  }
+
+  toString(): string {
+    return this.value;
   }
 }
 
@@ -93,6 +103,10 @@ export const __mockState = {
   errorMessages: [] as string[],
   /** Clipboard contents */
   clipboardText: '',
+  /** Extensions returned by extensions.getExtension, keyed by extension ID */
+  extensions: {} as Record<string, unknown>,
+  /** URIs passed to env.openExternal */
+  externalUris: [] as string[],
 };
 
 /**
@@ -109,6 +123,8 @@ export function __resetMock(): void {
   __mockState.warningMessages = [];
   __mockState.errorMessages = [];
   __mockState.clipboardText = '';
+  __mockState.extensions = {};
+  __mockState.externalUris = [];
 }
 
 /**
@@ -128,6 +144,39 @@ export function __createMemento(initial: Record<string, unknown> = {}) {
     },
     /** Raw store, exposed for assertions */
     __store: store,
+  };
+}
+
+/**
+ * Creates a mock of the Git extension bundled with VSCode.
+ *
+ * exports is exposed only when the extension is already active, so a caller
+ * that skips activate() on an inactive extension fails loudly.
+ *
+ * @param repositories Repositories the API should report
+ * @param options isActive to start already activated, getApiError to make
+ *                getAPI() throw
+ * @returns An Extension-compatible object
+ */
+export function __createGitExtension(
+  repositories: unknown[],
+  options: { isActive?: boolean; getApiError?: unknown } = {}
+) {
+  const gitExports = {
+    getAPI: (_version: number) => {
+      if (options.getApiError !== undefined) {
+        throw options.getApiError;
+      }
+
+      return { repositories };
+    },
+  };
+  const isActive = options.isActive ?? false;
+
+  return {
+    isActive,
+    exports: isActive ? gitExports : undefined,
+    activate: async () => gitExports,
   };
 }
 
@@ -195,4 +244,14 @@ export const env = {
       __mockState.clipboardText = text;
     },
   },
+  openExternal: async (target: Uri): Promise<boolean> => {
+    __mockState.externalUris.push(target.toString());
+
+    return true;
+  },
+};
+
+export const extensions = {
+  getExtension: <T>(extensionId: string): T | undefined =>
+    __mockState.extensions[extensionId] as T | undefined,
 };

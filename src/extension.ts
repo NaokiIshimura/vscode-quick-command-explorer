@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
 import { CONFIGURATION_SECTION, CommandService } from './commandService';
+import {
+  openRepositoryInExternalBrowser,
+  openRepositoryInIntegratedBrowser,
+} from './gitRepositoryService';
 import { CommandTreeItem } from './quickCommanderTreeItem';
 import { QuickCommanderViewProvider } from './quickCommanderViewProvider';
 import { CommandDefinition } from './types';
@@ -22,15 +26,6 @@ export function activate(context: vscode.ExtensionContext) {
     treeDataProvider: viewProvider,
     showCollapseAll: false,
   });
-
-  // Load the registered command list before the first render
-  commandService
-    .refreshAvailableCommands()
-    .then(() => viewProvider.refresh())
-    .catch((error) => {
-      console.error('Quick Command Explorer: failed to load command list', error);
-      viewProvider.refresh();
-    });
 
   // Register the execute command (invoked when a tree item is clicked)
   const executeCommand = vscode.commands.registerCommand(
@@ -132,6 +127,31 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  // Register the openRepositoryOnGitHub commands
+  // They are catalog commands, so they are invoked through
+  // quickCommander.execute
+  const openRepositoryOnGitHubCommand = vscode.commands.registerCommand(
+    'quickCommander.openRepositoryOnGitHub',
+    () => openRepositoryInExternalBrowser()
+  );
+
+  const openRepositoryOnGitHubInIntegratedBrowserCommand =
+    vscode.commands.registerCommand(
+      'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
+      () => openRepositoryInIntegratedBrowser()
+    );
+
+  // Load the registered command list before the first render.
+  // This runs after the registrations above so the commands contributed by
+  // this extension are part of the loaded list.
+  commandService
+    .refreshAvailableCommands()
+    .then(() => viewProvider.refresh())
+    .catch((error) => {
+      console.error('Quick Command Explorer: failed to load command list', error);
+      viewProvider.refresh();
+    });
+
   // Refresh the tree when the configuration changes
   const configurationListener = vscode.workspace.onDidChangeConfiguration(
     (event) => {
@@ -150,6 +170,8 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(toggleFavoriteCommand);
   context.subscriptions.push(copyCommandIdCommand);
   context.subscriptions.push(clearHistoryCommand);
+  context.subscriptions.push(openRepositoryOnGitHubCommand);
+  context.subscriptions.push(openRepositoryOnGitHubInIntegratedBrowserCommand);
   context.subscriptions.push(configurationListener);
 }
 

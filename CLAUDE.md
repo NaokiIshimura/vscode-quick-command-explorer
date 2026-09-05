@@ -59,7 +59,8 @@ project, Quick Explorer.
 1. **extension.ts** - Entry point
    - `activate()`: called when the extension starts
    - Creates the service and the view provider, creates the tree view, registers the commands
-   - Calls `refreshAvailableCommands()` on startup to load the registered command list before the first render
+   - Calls `refreshAvailableCommands()` on startup to load the registered command list before the first render.
+     It runs **after** the command registrations so the commands contributed by this extension are part of the loaded list
    - Registered commands:
      - `quickCommander.execute`: run a command (invoked when a tree item is clicked)
      - `quickCommander.refresh`: reload the registered command list and refresh the view
@@ -68,6 +69,8 @@ project, Quick Explorer.
      - `quickCommander.toggleFavorite`: add or remove a favorite
      - `quickCommander.copyCommandId`: copy a command ID to the clipboard
      - `quickCommander.clearHistory`: clear the execution history
+     - `quickCommander.openRepositoryOnGitHub`: open the page of the current repository remote in the external browser
+     - `quickCommander.openRepositoryOnGitHubInIntegratedBrowser`: open the same page in the integrated browser
 
 2. **QuickCommanderViewProvider** - TreeDataProvider implementation
    - Renders a **flat single-level list** by default, sorted by command name in ascending order
@@ -80,7 +83,9 @@ project, Quick Explorer.
    - Command execution (commands marked with `confirm` go through a confirmation dialog)
    - Execution history, kept in `globalState` as an LRU list
    - Favorites, kept in `globalState`
-   - Availability checks using `vscode.commands.getCommands(true)` and `process.platform`
+   - Availability checks using `vscode.commands.getCommands(true)`, `process.platform` and the
+     `requires` field (commands this extension contributes itself always have their own ID
+     registered, so `requires` is what says whether their dependency exists)
    - Settings loading and validation of custom commands
 
 4. **quickCommanderTreeItem.ts** - Concrete tree items
@@ -90,9 +95,18 @@ project, Quick Explorer.
 
 5. **commandCatalog.ts** - Built-in command definitions
    - `BUILT_IN_COMMANDS` is written in ascending order by command name
-   - Adding a command should only require editing this file
+   - Adding a command should only require editing this file, unless the command is
+     contributed by this extension rather than by VSCode
 
-6. **types.ts** - Type definitions and helpers
+6. **gitRepositoryService.ts** - Git repository lookup
+   - Reads the remotes through the Git extension bundled with VSCode (`vscode.git`)
+   - `toBrowsableUrl()` converts a remote URL (SSH or scheme form) into an https URL
+   - `openRepositoryInExternalBrowser()` / `openRepositoryInIntegratedBrowser()` back the two
+     `quickCommander.openRepositoryOnGitHub*` commands
+   - The integrated browser variant passes the URL to `workbench.action.browser.open`,
+     which accepts either a URL string or an options object
+
+7. **types.ts** - Type definitions and helpers
    - `CommandCategory` / `SectionKind` / `TreeNodeKind` enums
    - `CommandDefinition` interface
    - `compareCommandsByLabel()`: **the single definition of the ordering**
