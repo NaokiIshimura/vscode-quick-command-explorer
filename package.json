@@ -1,0 +1,246 @@
+{
+  "name": "quick-commander",
+  "displayName": "Quick Commander",
+  "description": "List and run frequently used VSCode commands from the Explorer sidebar",
+  "version": "0.0.1",
+  "publisher": "nacn",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NaokiIshimura/vscode-quick-commander.git"
+  },
+  "engines": {
+    "vscode": "^1.105.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "command",
+    "commander",
+    "palette",
+    "shortcut",
+    "productivity"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "quickCommander",
+          "name": "Quick Commander"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "quickCommander.execute",
+        "title": "Quick Commander: Execute Command"
+      },
+      {
+        "command": "quickCommander.refresh",
+        "title": "Quick Commander: Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "quickCommander.search",
+        "title": "Quick Commander: Search Commands",
+        "icon": "$(search)"
+      },
+      {
+        "command": "quickCommander.openSettings",
+        "title": "Quick Commander: Open Settings",
+        "icon": "$(gear)"
+      },
+      {
+        "command": "quickCommander.toggleFavorite",
+        "title": "Quick Commander: Toggle Favorite",
+        "icon": "$(star)"
+      },
+      {
+        "command": "quickCommander.copyCommandId",
+        "title": "Quick Commander: Copy Command ID",
+        "icon": "$(clippy)"
+      },
+      {
+        "command": "quickCommander.clearHistory",
+        "title": "Quick Commander: Clear History",
+        "icon": "$(clear-all)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "quickCommander.execute",
+          "when": "false"
+        },
+        {
+          "command": "quickCommander.toggleFavorite",
+          "when": "false"
+        },
+        {
+          "command": "quickCommander.copyCommandId",
+          "when": "false"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "quickCommander.search",
+          "when": "view == quickCommander",
+          "group": "navigation@1"
+        },
+        {
+          "command": "quickCommander.refresh",
+          "when": "view == quickCommander",
+          "group": "navigation@2"
+        },
+        {
+          "command": "quickCommander.openSettings",
+          "when": "view == quickCommander",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "quickCommander.toggleFavorite",
+          "when": "view == quickCommander && viewItem =~ /^(command|favoriteCommand)$/",
+          "group": "inline@1"
+        },
+        {
+          "command": "quickCommander.copyCommandId",
+          "when": "view == quickCommander && viewItem =~ /^(command|favoriteCommand)$/",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "quickCommander.clearHistory",
+          "when": "view == quickCommander && viewItem == recentSection",
+          "group": "inline@1"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Quick Commander",
+      "properties": {
+        "quickCommander.groupByCategory": {
+          "type": "boolean",
+          "default": false,
+          "description": "Group commands by category. When disabled, commands are shown as a flat list sorted by command name in ascending order.",
+          "scope": "resource"
+        },
+        "quickCommander.visibleCategories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "browser",
+              "workspace",
+              "window",
+              "custom"
+            ]
+          },
+          "default": [
+            "browser",
+            "workspace",
+            "window",
+            "custom"
+          ],
+          "uniqueItems": true,
+          "description": "Categories to show in the list.",
+          "scope": "resource"
+        },
+        "quickCommander.customCommands": {
+          "type": "array",
+          "default": [],
+          "description": "Additional commands to show in the list. Both id and label are required.",
+          "items": {
+            "type": "object",
+            "required": [
+              "id",
+              "label"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "VSCode command ID"
+              },
+              "label": {
+                "type": "string",
+                "description": "Name shown in the list (commands are sorted by this name)"
+              },
+              "category": {
+                "type": "string",
+                "enum": [
+                  "browser",
+                  "workspace",
+                  "window",
+                  "custom"
+                ],
+                "default": "custom",
+                "description": "Category the command belongs to"
+              },
+              "description": {
+                "type": "string",
+                "description": "Additional explanation shown in the tooltip"
+              },
+              "icon": {
+                "type": "string",
+                "description": "ThemeIcon ID (e.g. terminal)"
+              },
+              "args": {
+                "type": "array",
+                "description": "Arguments passed when the command is executed"
+              }
+            }
+          },
+          "scope": "resource"
+        },
+        "quickCommander.historyLimit": {
+          "type": "number",
+          "default": 10,
+          "minimum": 1,
+          "description": "Number of commands to keep in Recently Used.",
+          "scope": "resource"
+        },
+        "quickCommander.showUnavailableCommands": {
+          "type": "boolean",
+          "default": false,
+          "description": "Also show commands that are not available in the current environment (unregistered or unsupported platform).",
+          "scope": "resource"
+        },
+        "quickCommander.showFavoritesSection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Favorites section.",
+          "scope": "resource"
+        },
+        "quickCommander.showRecentSection": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the Recently Used section.",
+          "scope": "resource"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^24.10.9",
+    "@types/vscode": "^1.105.0",
+    "@vitest/coverage-v8": "^4.0.18",
+    "@vscode/vsce": "^3.6.2",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.18"
+  },
+  "activationEvents": [
+    "onView:quickCommander"
+  ]
+}
