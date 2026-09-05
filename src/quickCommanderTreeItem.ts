@@ -112,7 +112,7 @@ function buildTooltip(
 }
 
 /**
- * Node types handled by the Quick Commander tree view.
+ * Node types handled by the Quick Command Explorer tree view.
  */
 export type QuickCommanderTreeItem =
   | SectionTreeItem

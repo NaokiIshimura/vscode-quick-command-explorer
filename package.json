@@ -1,6 +1,6 @@
 {
   "name": "vscode-quick-commander",
-  "displayName": "Quick Commander",
+  "displayName": "Quick Command Explorer",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
   "version": "0.0.1",
   "publisher": "nacn",
@@ -27,43 +27,43 @@
       "explorer": [
         {
           "id": "quickCommander",
-          "name": "Quick Commander"
+          "name": "Quick Command Explorer"
         }
       ]
     },
     "commands": [
       {
         "command": "quickCommander.execute",
-        "title": "Quick Commander: Execute Command"
+        "title": "Quick Command Explorer: Execute Command"
       },
       {
         "command": "quickCommander.refresh",
-        "title": "Quick Commander: Refresh",
+        "title": "Quick Command Explorer: Refresh",
         "icon": "$(refresh)"
       },
       {
         "command": "quickCommander.search",
-        "title": "Quick Commander: Search Commands",
+        "title": "Quick Command Explorer: Search Commands",
         "icon": "$(search)"
       },
       {
         "command": "quickCommander.openSettings",
-        "title": "Quick Commander: Open Settings",
+        "title": "Quick Command Explorer: Open Settings",
         "icon": "$(gear)"
       },
       {
         "command": "quickCommander.toggleFavorite",
-        "title": "Quick Commander: Toggle Favorite",
+        "title": "Quick Command Explorer: Toggle Favorite",
         "icon": "$(star)"
       },
       {
         "command": "quickCommander.copyCommandId",
-        "title": "Quick Commander: Copy Command ID",
+        "title": "Quick Command Explorer: Copy Command ID",
         "icon": "$(clippy)"
       },
       {
         "command": "quickCommander.clearHistory",
-        "title": "Quick Commander: Clear History",
+        "title": "Quick Command Explorer: Clear History",
         "icon": "$(clear-all)"
       }
     ],
@@ -118,7 +118,7 @@
       ]
     },
     "configuration": {
-      "title": "Quick Commander",
+      "title": "Quick Command Explorer",
       "properties": {
         "quickCommander.groupByCategory": {
           "type": "boolean",

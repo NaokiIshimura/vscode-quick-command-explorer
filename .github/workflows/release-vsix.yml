@@ -71,7 +71,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.TAG }}
-          name: VSCode Quick Commander v${{ env.VERSION }}
+          name: Quick Command Explorer v${{ env.VERSION }}
           draft: false
           prerelease: false
           files: releases/vscode-quick-commander-${{ env.VERSION }}.vsix
