@@ -49,13 +49,13 @@ jobs:
       - name: Package VSIX
         run: |
           mkdir -p releases
-          vsce package --allow-missing-repository --skip-license --out releases/vscode-quick-commander-${VERSION}.vsix
+          vsce package --allow-missing-repository --skip-license --out releases/vscode-quick-command-explorer-${VERSION}.vsix
 
       - name: Upload VSIX asset (release event)
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: releases/vscode-quick-commander-${{ env.VERSION }}.vsix
+          files: releases/vscode-quick-command-explorer-${{ env.VERSION }}.vsix
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -63,8 +63,8 @@ jobs:
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
-          name: vscode-quick-commander-${{ env.VERSION }}
-          path: releases/vscode-quick-commander-${{ env.VERSION }}.vsix
+          name: vscode-quick-command-explorer-${{ env.VERSION }}
+          path: releases/vscode-quick-command-explorer-${{ env.VERSION }}.vsix
 
       - name: Upload VSIX asset (push/manual)
         if: github.event_name != 'release'
@@ -74,7 +74,7 @@ jobs:
           name: Quick Command Explorer v${{ env.VERSION }}
           draft: false
           prerelease: false
-          files: releases/vscode-quick-commander-${{ env.VERSION }}.vsix
+          files: releases/vscode-quick-command-explorer-${{ env.VERSION }}.vsix
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -86,6 +86,6 @@ jobs:
             echo "VSCE_PAT is not set. Skipping VS Code Marketplace publishing."
             exit 0
           fi
-          vsce publish --pat $VSCE_PAT --packagePath releases/vscode-quick-commander-${VERSION}.vsix
+          vsce publish --pat $VSCE_PAT --packagePath releases/vscode-quick-command-explorer-${VERSION}.vsix
         env:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}

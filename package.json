@@ -6,7 +6,7 @@
   "publisher": "nacn",
   "repository": {
     "type": "git",
-    "url": "https://github.com/NaokiIshimura/vscode-quick-commander.git"
+    "url": "https://github.com/NaokiIshimura/vscode-quick-command-explorer.git"
   },
   "engines": {
     "vscode": "^1.105.0"
