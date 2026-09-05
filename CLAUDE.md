@@ -73,6 +73,7 @@ project, Quick Explorer.
    - Renders a **flat single-level list** by default, sorted by command name in ascending order
    - Switches to a two-level category tree only when `quickCommander.groupByCategory` is enabled
    - Hides the `Favorites` and `Recently Used` sections when they are empty
+   - Renders the `Favorites` and `Recently Used` sections collapsed on startup
    - Owns the refresh notification (EventEmitter)
 
 3. **CommandService** - Domain logic
@@ -84,7 +85,7 @@ project, Quick Explorer.
 
 4. **quickCommanderTreeItem.ts** - Concrete tree items
    - `CommandTreeItem`: a command; clicking it runs `quickCommander.execute`
-   - `SectionTreeItem`: the `Favorites` / `Recently Used` headings
+   - `SectionTreeItem`: the `Favorites` / `Recently Used` headings, collapsed by default
    - `CategoryTreeItem`: a category heading (only when `groupByCategory` is enabled)
 
 5. **commandCatalog.ts** - Built-in command definitions

@@ -12,6 +12,8 @@ import {
 
 /**
  * Tree item for a section heading (Favorites / Recently Used).
+ * The section starts collapsed so the flat command list stays visible
+ * right after the extension is activated.
  */
 export class SectionTreeItem extends vscode.TreeItem {
   /** Node kind */
@@ -21,7 +23,7 @@ export class SectionTreeItem extends vscode.TreeItem {
    * @param section Section kind
    */
   constructor(readonly section: SectionKind) {
-    super(getSectionLabel(section), vscode.TreeItemCollapsibleState.Expanded);
+    super(getSectionLabel(section), vscode.TreeItemCollapsibleState.Collapsed);
 
     this.iconPath = new vscode.ThemeIcon(getSectionIcon(section));
     this.contextValue =

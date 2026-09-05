@@ -35,8 +35,8 @@ Enable `quickCommander.showUnavailableCommands` to show them anyway, marked with
 | Feature | Description |
 | --- | --- |
 | Command list | Flat list sorted by command name in ascending order. Click to run |
-| Favorites | Starred commands are shown at the top, sorted by command name |
-| Recently Used | Recently executed commands, **most recently executed first** |
+| Favorites | Starred commands are shown at the top, sorted by command name. Collapsed on startup |
+| Recently Used | Recently executed commands, **most recently executed first**. Collapsed on startup |
 | Quick search | Filter and run through a QuickPick from the `$(search)` button in the view header |
 | Custom commands | Add any command to the list through the settings |
 | Category view | Enable `groupByCategory` to switch to a grouped, two-level tree |
