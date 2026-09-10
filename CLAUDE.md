@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Quick Commander is a VSCode extension that lists frequently used VSCode commands in the
+Quick Command Explorer is a VSCode extension that lists frequently used VSCode commands in the
 Explorer sidebar and runs them with a single click.
 Commands are displayed as a flat list sorted by **command name in ascending order**.
 

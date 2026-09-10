@@ -248,7 +248,7 @@ export class CommandService {
     }
 
     vscode.window.showWarningMessage(
-      `Quick Commander: ignored ${invalidIndexes.length} entries in ` +
+      `Quick Command Explorer: ignored ${invalidIndexes.length} entries in ` +
         `${CONFIGURATION_SECTION}.customCommands because they are missing an id or a label`
     );
   }
@@ -433,7 +433,7 @@ export class CommandService {
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       vscode.window.showErrorMessage(
-        `Quick Commander: failed to run "${definition.label}" (${message})`
+        `Quick Command Explorer: failed to run "${definition.label}" (${message})`
       );
 
       return false;

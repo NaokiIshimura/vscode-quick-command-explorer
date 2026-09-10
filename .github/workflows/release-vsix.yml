@@ -32,14 +32,14 @@ jobs:
         if: github.event_name != 'release'
         uses: actions/upload-artifact@v4
         with:
-          name: vscode-quick-commander-${{ needs.build.outputs.version }}
+          name: vscode-quick-command-explorer-${{ needs.build.outputs.version }}
           path: releases/${{ needs.build.outputs.vsix-filename }}
 
       - name: Upload VSIX to release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ needs.build.outputs.version }}
-          name: Quick Commander v${{ needs.build.outputs.version }}
+          name: Quick Command Explorer v${{ needs.build.outputs.version }}
           draft: false
           prerelease: false
           files: releases/${{ needs.build.outputs.vsix-filename }}

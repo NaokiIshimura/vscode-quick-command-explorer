@@ -195,7 +195,7 @@ async function resolveWebUrlOrWarn(): Promise<string | undefined> {
 
   if ('error' in resolved) {
     vscode.window.showWarningMessage(
-      `Quick Commander: ${resolved.error}`
+      `Quick Command Explorer: ${resolved.error}`
     );
 
     return undefined;
