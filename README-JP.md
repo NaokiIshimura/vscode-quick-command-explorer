@@ -1,11 +1,11 @@
-# Quick Commander
+# Quick Command Explorer
 
 [English](README.md) | 日本語
 
 よく利用するVSCodeコマンドをExplorerサイドバーに一覧表示し、クリック1回で実行できるVSCode拡張機能です。
 
 コマンドパレット（`Cmd+Shift+P`）は「コマンド名を覚えている」ことが前提ですが、
-Quick Commanderは**コマンド名の昇順に並んだ一覧から選ぶ**ことで、コマンドの発見性と実行速度を高めます。
+Quick Command Explorerは**コマンド名の昇順に並んだ一覧から選ぶ**ことで、コマンドの発見性と実行速度を高めます。
 
 ## 内蔵コマンド
 

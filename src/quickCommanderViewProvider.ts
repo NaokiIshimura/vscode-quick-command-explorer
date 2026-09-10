@@ -14,7 +14,7 @@ import {
 } from './types';
 
 /**
- * TreeDataProvider implementation for Quick Commander.
+ * TreeDataProvider implementation for Quick Command Explorer.
  *
  * By default it renders a flat single-level list sorted by command name in
  * ascending order. It switches to a two-level category tree only when the

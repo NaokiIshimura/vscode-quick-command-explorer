@@ -1,11 +1,11 @@
-# Quick Commander
+# Quick Command Explorer
 
 English | [日本語](README-JP.md)
 
 A VSCode extension that lists frequently used VSCode commands in the Explorer sidebar and runs them with a single click.
 
 The Command Palette (`Cmd+Shift+P`) assumes you already remember the command name.
-Quick Commander instead lets you **pick from a list sorted by command name in ascending order**, making commands easier to discover and faster to run.
+Quick Command Explorer instead lets you **pick from a list sorted by command name in ascending order**, making commands easier to discover and faster to run.
 
 ## Built-in commands
 
