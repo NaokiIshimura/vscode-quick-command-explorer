@@ -9,17 +9,26 @@ Quick Command Explorerは**コマンド名の昇順に並んだ一覧から選�
 
 ## 内蔵コマンド
 
-初期状態では以下の5つのコマンドを内蔵しています（**コマンド名の昇順**で表示されます）。
+初期状態では以下の6つのコマンドを内蔵しています（**コマンド名の昇順**で表示されます）。
 
 | # | コマンド名 | コマンドID | 説明 |
 | --- | --- | --- | --- |
 | 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | 現在のワークスペースを新しいウィンドウで複製する |
 | 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | すべてのウィンドウを1つにまとめる（**macOS専用**） |
 | 3 | Open Integrated Browser | `workbench.action.browser.open` | 統合ブラウザを開く |
-| 4 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | 開いているリポジトリのリモートのページを外部ブラウザで開く |
-| 5 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | 同じページを統合ブラウザで開く |
+| 4 | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | 統合ブラウザを開き、右側のエディタグループへ移動する |
+| 5 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | 開いているリポジトリのリモートのページを外部ブラウザで開く |
+| 6 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | 同じページを統合ブラウザで開く |
 
 コマンドの追加は `quickCommander.customCommands` 設定から行えます。
+
+### Open Integrated Browser on the Right について
+
+このコマンドはVSCode組み込みのコマンドではなく、本拡張機能が提供するコマンドです。
+
+統合ブラウザはアクティブなエディタグループで開くため、そのままでは開いていたコードが
+隠れてしまいます。そこで、開いた直後に `workbench.action.moveEditorToRightGroup` を
+実行し、左にコード・右にブラウザという分割状態にします。
 
 ### Open Repository on GitHub について
 
@@ -46,6 +55,7 @@ Git拡張が無効な場合、リポジトリを開いていない場合、リ�
 | --- | --- |
 | Merge All Windows | macOSかつ `window.nativeTabs` が有効であること |
 | Open Integrated Browser | 統合ブラウザを搭載したバージョンのVSCode（1.136以降で確認） |
+| Open Integrated Browser on the Right | 上と同じ、加えて `workbench.action.moveEditorToRightGroup` が利用できること |
 | Open Repository on GitHub in Integrated Browser | 上と同じ（`workbench.action.browser.open` にURLを渡すため） |
 
 `quickCommander.showUnavailableCommands` を有効にすると、利用できないコマンドも警告アイコン付きで表示されます。

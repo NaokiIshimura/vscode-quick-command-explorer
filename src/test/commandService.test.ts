@@ -7,10 +7,22 @@ import { CommandCategory, CommandDefinition } from '../types';
 const BROWSER_ID = 'workbench.action.browser.open';
 const DUPLICATE_ID = 'workbench.action.duplicateWorkspaceInNewWindow';
 const MERGE_ID = 'workbench.action.mergeAllWindowTabs';
+const BROWSER_RIGHT_ID = 'quickCommander.openIntegratedBrowserOnTheRight';
 const GITHUB_ID = 'quickCommander.openRepositoryOnGitHub';
 const GITHUB_BROWSER_ID = 'quickCommander.openRepositoryOnGitHubInIntegratedBrowser';
 
-const ALL_BUILT_IN_IDS = BUILT_IN_COMMANDS.map((command) => command.id);
+/**
+ * Every command ID a built-in command needs to be considered available:
+ * its own ID plus the IDs it declares in requires.
+ */
+const ALL_BUILT_IN_IDS = [
+  ...new Set(
+    BUILT_IN_COMMANDS.flatMap((command) => [
+      command.id,
+      ...(command.requires ?? []),
+    ])
+  ),
+];
 
 let memento: ReturnType<typeof __createMemento>;
 let originalPlatform: PropertyDescriptor | undefined;
@@ -225,6 +237,7 @@ describe('getAllCommands / getVisibleCommands', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Integrated Browser on the Right',
       'Open Repository on GitHub',
       'Open Repository on GitHub in Integrated Browser',
     ]);
@@ -247,6 +260,7 @@ describe('getAllCommands / getVisibleCommands', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Integrated Browser on the Right',
       'Open Repository on GitHub',
       'Open Repository on GitHub in Integrated Browser',
       'Zen Mode',
@@ -260,7 +274,7 @@ describe('getAllCommands / getVisibleCommands', () => {
     const service = await createService();
     const commands = service.getAllCommands();
 
-    expect(commands).toHaveLength(5);
+    expect(commands).toHaveLength(6);
     expect(commands.find((c) => c.id === BROWSER_ID)?.label).toBe(
       'Browser (Custom)'
     );
@@ -280,6 +294,7 @@ describe('getAllCommands / getVisibleCommands', () => {
     expect(service.getVisibleCommands().map((c) => c.id)).toEqual([
       DUPLICATE_ID,
       BROWSER_ID,
+      BROWSER_RIGHT_ID,
       GITHUB_ID,
       GITHUB_BROWSER_ID,
     ]);
@@ -297,7 +312,7 @@ describe('getAllCommands / getVisibleCommands', () => {
 
     expect(
       service.getVisibleCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
-    ).toEqual([BROWSER_ID, GITHUB_ID, GITHUB_BROWSER_ID]);
+    ).toEqual([BROWSER_ID, BROWSER_RIGHT_ID, GITHUB_ID, GITHUB_BROWSER_ID]);
     expect(
       service.getVisibleCommandsByCategory(CommandCategory.Custom)
     ).toEqual([]);
