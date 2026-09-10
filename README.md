@@ -9,17 +9,27 @@ Quick Command Explorer instead lets you **pick from a list sorted by command nam
 
 ## Built-in commands
 
-Five commands ship with the extension. They are displayed **in ascending order by command name**.
+Six commands ship with the extension. They are displayed **in ascending order by command name**.
 
 | # | Command name | Command ID | Description |
 | --- | --- | --- | --- |
 | 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | Duplicate the current workspace in a new window |
 | 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | Merge all windows into one (**macOS only**) |
 | 3 | Open Integrated Browser | `workbench.action.browser.open` | Open the integrated browser |
-| 4 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | Open the page of the current repository remote in the external browser |
-| 5 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | Open the same page in the integrated browser |
+| 4 | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | Open the integrated browser and move it to the editor group on the right |
+| 5 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | Open the page of the current repository remote in the external browser |
+| 6 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | Open the same page in the integrated browser |
 
 Use the `quickCommander.customCommands` setting to add more commands.
+
+### Open Integrated Browser on the Right
+
+This command is contributed by the extension itself rather than by VSCode.
+
+The integrated browser opens in the active editor group, which covers the code
+that is already open. This command therefore runs
+`workbench.action.moveEditorToRightGroup` right after opening it, leaving the
+code in the left group and the browser in a split on the right.
 
 ### Open Repository on GitHub
 
@@ -48,6 +58,7 @@ Commands that are not available in the current environment are hidden by default
 | --- | --- |
 | Merge All Windows | macOS with `window.nativeTabs` enabled |
 | Open Integrated Browser | A VSCode build that ships the integrated browser (confirmed on 1.136 and later) |
+| Open Integrated Browser on the Right | Same as above, plus `workbench.action.moveEditorToRightGroup` |
 | Open Repository on GitHub in Integrated Browser | Same as above, because it hands the URL to `workbench.action.browser.open` |
 
 Enable `quickCommander.showUnavailableCommands` to show them anyway, marked with a warning icon.

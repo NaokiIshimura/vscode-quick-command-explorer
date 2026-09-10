@@ -2,7 +2,7 @@
   "name": "quick-command-explorer",
   "displayName": "Quick Command Explorer",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "nacn",
   "repository": {
     "type": "git",
@@ -65,6 +65,11 @@
         "command": "quickCommander.clearHistory",
         "title": "Quick Command Explorer: Clear History",
         "icon": "$(clear-all)"
+      },
+      {
+        "command": "quickCommander.openIntegratedBrowserOnTheRight",
+        "title": "Quick Command Explorer: Open Integrated Browser on the Right",
+        "icon": "$(split-horizontal)"
       },
       {
         "command": "quickCommander.openRepositoryOnGitHub",

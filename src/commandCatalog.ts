@@ -11,6 +11,13 @@ import {
 export const INTEGRATED_BROWSER_COMMAND_ID = 'workbench.action.browser.open';
 
 /**
+ * ID of the VSCode command that moves the active editor into the editor group
+ * on the right, creating that group when it does not exist yet.
+ */
+export const MOVE_EDITOR_TO_RIGHT_GROUP_COMMAND_ID =
+  'workbench.action.moveEditorToRightGroup';
+
+/**
  * Built-in command definitions.
  *
  * Listed in ascending order by command name (label). The actual display order
@@ -39,6 +46,18 @@ export const BUILT_IN_COMMANDS: readonly CommandDefinition[] = [
     category: CommandCategory.Browser,
     description: 'Open the integrated browser',
     icon: 'globe',
+  },
+  {
+    id: 'quickCommander.openIntegratedBrowserOnTheRight',
+    label: 'Open Integrated Browser on the Right',
+    category: CommandCategory.Browser,
+    description:
+      'Open the integrated browser and move it to the editor group on the right',
+    icon: 'split-horizontal',
+    requires: [
+      INTEGRATED_BROWSER_COMMAND_ID,
+      MOVE_EDITOR_TO_RIGHT_GROUP_COMMAND_ID,
+    ],
   },
   {
     id: 'quickCommander.openRepositoryOnGitHub',

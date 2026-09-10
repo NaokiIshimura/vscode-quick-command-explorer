@@ -4,6 +4,7 @@ import {
   openRepositoryInExternalBrowser,
   openRepositoryInIntegratedBrowser,
 } from './gitRepositoryService';
+import { openIntegratedBrowserInRightGroup } from './integratedBrowserService';
 import { CommandTreeItem } from './quickCommanderTreeItem';
 import { QuickCommanderViewProvider } from './quickCommanderViewProvider';
 import { CommandDefinition } from './types';
@@ -127,6 +128,14 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
+  // Register the openIntegratedBrowserOnTheRight command.
+  // It is a catalog command, so it is invoked through quickCommander.execute
+  const openIntegratedBrowserOnTheRightCommand =
+    vscode.commands.registerCommand(
+      'quickCommander.openIntegratedBrowserOnTheRight',
+      () => openIntegratedBrowserInRightGroup()
+    );
+
   // Register the openRepositoryOnGitHub commands
   // They are catalog commands, so they are invoked through
   // quickCommander.execute
@@ -170,6 +179,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(toggleFavoriteCommand);
   context.subscriptions.push(copyCommandIdCommand);
   context.subscriptions.push(clearHistoryCommand);
+  context.subscriptions.push(openIntegratedBrowserOnTheRightCommand);
   context.subscriptions.push(openRepositoryOnGitHubCommand);
   context.subscriptions.push(openRepositoryOnGitHubInIntegratedBrowserCommand);
   context.subscriptions.push(configurationListener);

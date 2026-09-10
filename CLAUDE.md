@@ -69,6 +69,8 @@ project, Quick Explorer.
      - `quickCommander.toggleFavorite`: add or remove a favorite
      - `quickCommander.copyCommandId`: copy a command ID to the clipboard
      - `quickCommander.clearHistory`: clear the execution history
+     - `quickCommander.openIntegratedBrowserOnTheRight`: open the integrated browser and move it
+       to the editor group on the right
      - `quickCommander.openRepositoryOnGitHub`: open the page of the current repository remote in the external browser
      - `quickCommander.openRepositoryOnGitHubInIntegratedBrowser`: open the same page in the integrated browser
 
@@ -98,7 +100,14 @@ project, Quick Explorer.
    - Adding a command should only require editing this file, unless the command is
      contributed by this extension rather than by VSCode
 
-6. **gitRepositoryService.ts** - Git repository lookup
+6. **integratedBrowserService.ts** - Integrated browser helpers
+   - `openIntegratedBrowserInRightGroup()` backs `quickCommander.openIntegratedBrowserOnTheRight`
+   - Opens the browser, then runs `workbench.action.moveEditorToRightGroup` so the browser
+     ends up in a split on the right instead of covering the code
+   - Errors are left to propagate, because `CommandService.execute()` already turns a rejected
+     command into an error notification
+
+7. **gitRepositoryService.ts** - Git repository lookup
    - Reads the remotes through the Git extension bundled with VSCode (`vscode.git`)
    - `toBrowsableUrl()` converts a remote URL (SSH or scheme form) into an https URL
    - `openRepositoryInExternalBrowser()` / `openRepositoryInIntegratedBrowser()` back the two
@@ -106,7 +115,7 @@ project, Quick Explorer.
    - The integrated browser variant passes the URL to `workbench.action.browser.open`,
      which accepts either a URL string or an options object
 
-7. **types.ts** - Type definitions and helpers
+8. **types.ts** - Type definitions and helpers
    - `CommandCategory` / `SectionKind` / `TreeNodeKind` enums
    - `CommandDefinition` interface
    - `compareCommandsByLabel()`: **the single definition of the ordering**

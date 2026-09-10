@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   BUILT_IN_COMMANDS,
   INTEGRATED_BROWSER_COMMAND_ID,
+  MOVE_EDITOR_TO_RIGHT_GROUP_COMMAND_ID,
   findCommandById,
   getCommandsByCategory,
   getSortedCommands,
@@ -9,8 +10,8 @@ import {
 import { CommandCategory, compareCommandsByLabel } from '../types';
 
 describe('BUILT_IN_COMMANDS', () => {
-  it('contains five built-in commands', () => {
-    expect(BUILT_IN_COMMANDS).toHaveLength(5);
+  it('contains six built-in commands', () => {
+    expect(BUILT_IN_COMMANDS).toHaveLength(6);
   });
 
   it('has no duplicate command IDs', () => {
@@ -43,6 +44,7 @@ describe('BUILT_IN_COMMANDS', () => {
       'Duplicate As Workspace in New Window',
       'Merge All Windows',
       'Open Integrated Browser',
+      'Open Integrated Browser on the Right',
       'Open Repository on GitHub',
       'Open Repository on GitHub in Integrated Browser',
     ]);
@@ -53,8 +55,20 @@ describe('BUILT_IN_COMMANDS', () => {
       'workbench.action.duplicateWorkspaceInNewWindow',
       'workbench.action.mergeAllWindowTabs',
       'workbench.action.browser.open',
+      'quickCommander.openIntegratedBrowserOnTheRight',
       'quickCommander.openRepositoryOnGitHub',
       'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
+    ]);
+  });
+
+  it('marks the right group variant as requiring the browser and move commands', () => {
+    const command = findCommandById(
+      'quickCommander.openIntegratedBrowserOnTheRight'
+    );
+
+    expect(command?.requires).toEqual([
+      INTEGRATED_BROWSER_COMMAND_ID,
+      MOVE_EDITOR_TO_RIGHT_GROUP_COMMAND_ID,
     ]);
   });
 
@@ -129,6 +143,7 @@ describe('getCommandsByCategory', () => {
       getCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
     ).toEqual([
       'workbench.action.browser.open',
+      'quickCommander.openIntegratedBrowserOnTheRight',
       'quickCommander.openRepositoryOnGitHub',
       'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
     ]);
