@@ -202,7 +202,7 @@ describe('openRepositoryInExternalBrowser', () => {
     expect(await openRepositoryInExternalBrowser()).toBe(false);
     expect(__mockState.externalUris).toEqual([]);
     expect(__mockState.warningMessages).toEqual([
-      'Quick Command Explorer: the Git extension is not available',
+      'Quick Commander: the Git extension is not available',
     ]);
   });
 });
@@ -222,7 +222,7 @@ describe('openRepositoryInIntegratedBrowser', () => {
     expect(await openRepositoryInIntegratedBrowser()).toBe(false);
     expect(__mockState.executedCommands).toEqual([]);
     expect(__mockState.warningMessages).toEqual([
-      'Quick Command Explorer: the Git extension is not available',
+      'Quick Commander: the Git extension is not available',
     ]);
   });
 });

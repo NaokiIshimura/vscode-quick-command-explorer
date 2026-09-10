@@ -1,8 +1,8 @@
 {
-  "name": "quick-command-explorer",
-  "displayName": "Quick Command Explorer",
+  "name": "quick-commander",
+  "displayName": "Quick Commander",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "publisher": "nacn",
   "repository": {
     "type": "git",
@@ -27,58 +27,58 @@
       "explorer": [
         {
           "id": "quickCommander",
-          "name": "Quick Command Explorer"
+          "name": "Quick Commander"
         }
       ]
     },
     "commands": [
       {
         "command": "quickCommander.execute",
-        "title": "Quick Command Explorer: Execute Command"
+        "title": "Quick Commander: Execute Command"
       },
       {
         "command": "quickCommander.refresh",
-        "title": "Quick Command Explorer: Refresh",
+        "title": "Quick Commander: Refresh",
         "icon": "$(refresh)"
       },
       {
         "command": "quickCommander.search",
-        "title": "Quick Command Explorer: Search Commands",
+        "title": "Quick Commander: Search Commands",
         "icon": "$(search)"
       },
       {
         "command": "quickCommander.openSettings",
-        "title": "Quick Command Explorer: Open Settings",
+        "title": "Quick Commander: Open Settings",
         "icon": "$(gear)"
       },
       {
         "command": "quickCommander.toggleFavorite",
-        "title": "Quick Command Explorer: Toggle Favorite",
+        "title": "Quick Commander: Toggle Favorite",
         "icon": "$(star)"
       },
       {
         "command": "quickCommander.copyCommandId",
-        "title": "Quick Command Explorer: Copy Command ID",
+        "title": "Quick Commander: Copy Command ID",
         "icon": "$(clippy)"
       },
       {
         "command": "quickCommander.clearHistory",
-        "title": "Quick Command Explorer: Clear History",
+        "title": "Quick Commander: Clear History",
         "icon": "$(clear-all)"
       },
       {
         "command": "quickCommander.openIntegratedBrowserOnTheRight",
-        "title": "Quick Command Explorer: Open Integrated Browser on the Right",
+        "title": "Quick Commander: Open Integrated Browser on the Right",
         "icon": "$(split-horizontal)"
       },
       {
         "command": "quickCommander.openRepositoryOnGitHub",
-        "title": "Quick Command Explorer: Open Repository on GitHub",
+        "title": "Quick Commander: Open Repository on GitHub",
         "icon": "$(github)"
       },
       {
         "command": "quickCommander.openRepositoryOnGitHubInIntegratedBrowser",
-        "title": "Quick Command Explorer: Open Repository on GitHub in Integrated Browser",
+        "title": "Quick Commander: Open Repository on GitHub in Integrated Browser",
         "icon": "$(globe)"
       }
     ],
@@ -133,7 +133,7 @@
       ]
     },
     "configuration": {
-      "title": "Quick Command Explorer",
+      "title": "Quick Commander",
       "properties": {
         "quickCommander.groupByCategory": {
           "type": "boolean",
