@@ -9,16 +9,16 @@ Quick Command Explorerは**コマンド名の昇順に並んだ一覧から選�
 
 ## 内蔵コマンド
 
-初期状態では以下の6つのコマンドを内蔵しています（**コマンド名の昇順**で表示されます）。
+初期状態では以下の6つのコマンドを内蔵しています。カテゴリごとにグルーピングされ、カテゴリ内は**コマンド名の昇順**で表示されます。
 
-| # | コマンド名 | コマンドID | 説明 |
+| カテゴリ | コマンド名 | コマンドID | 説明 |
 | --- | --- | --- | --- |
-| 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | 現在のワークスペースを新しいウィンドウで複製する |
-| 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | すべてのウィンドウを1つにまとめる（**macOS専用**） |
-| 3 | Open Integrated Browser | `workbench.action.browser.open` | 統合ブラウザを開く |
-| 4 | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | 統合ブラウザを開き、右側のエディタグループへ移動する |
-| 5 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | 開いているリポジトリのリモートのページを外部ブラウザで開く |
-| 6 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | 同じページを統合ブラウザで開く |
+| Workspace | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | 現在のワークスペースを新しいウィンドウで複製する |
+| Window | Merge All Windows | `workbench.action.mergeAllWindowTabs` | すべてのウィンドウを1つにまとめる（**macOS専用**） |
+| Integrated Browser | Open Integrated Browser | `workbench.action.browser.open` | 統合ブラウザを開く |
+| Integrated Browser | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | 統合ブラウザを開き、右側のエディタグループへ移動する |
+| Repository | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | 開いているリポジトリのリモートのページを外部ブラウザで開く |
+| Repository | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | 同じページを統合ブラウザで開く |
 
 コマンドの追加は `quickCommander.customCommands` 設定から行えます。
 
@@ -64,23 +64,22 @@ Git拡張が無効な場合、リポジトリを開いていない場合、リ�
 
 | 機能 | 説明 |
 | --- | --- |
-| コマンド一覧 | コマンド名の昇順のフラットな一覧。クリックで即実行 |
+| コマンド一覧 | カテゴリ（Workspace → Window → Integrated Browser → Repository → Custom）ごとにグルーピング表示。クリックで即実行 |
 | Favorites | ★ を付けたコマンドを最上位に表示（コマンド名の昇順）。起動直後は折りたたみ状態 |
-| Recently Used | 直近に実行したコマンドを**実行が新しい順**で表示。起動直後は折りたたみ状態 |
 | クイック検索 | ビューヘッダーの `$(search)` からQuickPickで絞り込み実行 |
 | カスタムコマンド | 設定から任意のコマンドを一覧に追加 |
-| カテゴリ表示 | `groupByCategory` を有効にするとカテゴリごとのグルーピング表示に切替 |
+| フラット表示 | `groupByCategory` を無効にするとコマンド名の昇順のフラットな一覧に切替 |
 | コマンドIDコピー | 右クリックメニューからコマンドIDをクリップボードへコピー |
 
 ### 並び順の仕様
 
 | 対象 | 並び順 |
 | --- | --- |
-| メインのコマンド一覧 | コマンド名の昇順 |
+| カテゴリ | Workspace → Window → Integrated Browser → Repository → Custom |
+| カテゴリ内 | コマンド名の昇順 |
+| フラット表示（`groupByCategory` 無効時） | コマンド名の昇順 |
 | Favorites | コマンド名の昇順 |
-| Recently Used | 実行が新しい順（履歴という性質上、名前順にはしません） |
 | クイック検索（QuickPick） | コマンド名の昇順 |
-| カテゴリ表示時のカテゴリ内 | コマンド名の昇順 |
 
 昇順の比較はロケール `en` 固定・大文字小文字を区別しない・数字は自然順（`Item 2` → `Item 10`）です。
 
@@ -88,13 +87,11 @@ Git拡張が無効な場合、リポジトリを開いていない場合、リ�
 
 | 設定キー | 型 | 既定値 | 説明 |
 | --- | --- | --- | --- |
-| `quickCommander.groupByCategory` | boolean | `false` | カテゴリごとにグルーピング表示する |
+| `quickCommander.groupByCategory` | boolean | `true` | カテゴリごとにグルーピング表示する |
 | `quickCommander.visibleCategories` | string[] | 全カテゴリ | 一覧に表示するカテゴリ |
 | `quickCommander.customCommands` | object[] | `[]` | 一覧に追加するコマンド |
-| `quickCommander.historyLimit` | number | `10` | Recently Used に保持する件数 |
 | `quickCommander.showUnavailableCommands` | boolean | `false` | 利用できないコマンドも表示する |
 | `quickCommander.showFavoritesSection` | boolean | `true` | Favorites セクションを表示する |
-| `quickCommander.showRecentSection` | boolean | `true` | Recently Used セクションを表示する |
 
 ### カスタムコマンドの追加例
 
@@ -121,7 +118,7 @@ Git拡張が無効な場合、リポジトリを開いていない場合、リ�
 | --- | --- | --- |
 | `id` | ○ | VSCodeのコマンドID |
 | `label` | ○ | 一覧に表示する名前（この名前で昇順に並びます） |
-| `category` | | `browser` / `workspace` / `window` / `custom`（既定: `custom`） |
+| `category` | | `workspace` / `window` / `integratedBrowser` / `repository` / `custom`（既定: `custom`） |
 | `description` | | ツールチップに表示する補足説明 |
 | `icon` | | [ThemeIcon](https://code.visualstudio.com/api/references/icons-in-labels) のID |
 | `args` | | コマンド実行時に渡す引数 |

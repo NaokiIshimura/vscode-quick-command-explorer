@@ -67,55 +67,34 @@ describe('configuration loading', () => {
   it('returns the default values', async () => {
     const service = await createService();
 
-    expect(service.isGroupByCategory()).toBe(false);
+    expect(service.isGroupByCategory()).toBe(true);
     expect(service.isShowUnavailableCommands()).toBe(false);
     expect(service.isShowFavoritesSection()).toBe(true);
-    expect(service.isShowRecentSection()).toBe(true);
-    expect(service.getHistoryLimit()).toBe(10);
     expect(service.getVisibleCategories()).toEqual([
-      CommandCategory.Browser,
       CommandCategory.Workspace,
       CommandCategory.Window,
+      CommandCategory.IntegratedBrowser,
+      CommandCategory.Repository,
       CommandCategory.Custom,
     ]);
   });
 
   it('reflects the configured values', async () => {
     __mockState.configuration = {
-      'quickCommander.groupByCategory': true,
+      'quickCommander.groupByCategory': false,
       'quickCommander.showUnavailableCommands': true,
       'quickCommander.showFavoritesSection': false,
-      'quickCommander.showRecentSection': false,
-      'quickCommander.historyLimit': 3,
-      'quickCommander.visibleCategories': ['browser'],
+      'quickCommander.visibleCategories': ['integratedBrowser', 'repository'],
     };
     const service = await createService();
 
-    expect(service.isGroupByCategory()).toBe(true);
+    expect(service.isGroupByCategory()).toBe(false);
     expect(service.isShowUnavailableCommands()).toBe(true);
     expect(service.isShowFavoritesSection()).toBe(false);
-    expect(service.isShowRecentSection()).toBe(false);
-    expect(service.getHistoryLimit()).toBe(3);
-    expect(service.getVisibleCategories()).toEqual([CommandCategory.Browser]);
-  });
-
-  it('falls back to the default when historyLimit is invalid', async () => {
-    const service = await createService();
-
-    __mockState.configuration['quickCommander.historyLimit'] = 0;
-    expect(service.getHistoryLimit()).toBe(10);
-
-    __mockState.configuration['quickCommander.historyLimit'] = -1;
-    expect(service.getHistoryLimit()).toBe(10);
-
-    __mockState.configuration['quickCommander.historyLimit'] = 'abc';
-    expect(service.getHistoryLimit()).toBe(10);
-
-    __mockState.configuration['quickCommander.historyLimit'] = Infinity;
-    expect(service.getHistoryLimit()).toBe(10);
-
-    __mockState.configuration['quickCommander.historyLimit'] = 5.7;
-    expect(service.getHistoryLimit()).toBe(5);
+    expect(service.getVisibleCategories()).toEqual([
+      CommandCategory.IntegratedBrowser,
+      CommandCategory.Repository,
+    ]);
   });
 
   it('returns every category when visibleCategories is not an array', async () => {
@@ -123,21 +102,31 @@ describe('configuration loading', () => {
     const service = await createService();
 
     expect(service.getVisibleCategories()).toEqual([
-      CommandCategory.Browser,
       CommandCategory.Workspace,
       CommandCategory.Window,
+      CommandCategory.IntegratedBrowser,
+      CommandCategory.Repository,
       CommandCategory.Custom,
     ]);
   });
 
   it('ignores non-string entries in visibleCategories', async () => {
     __mockState.configuration['quickCommander.visibleCategories'] = [
-      'browser',
+      'window',
       42,
     ];
     const service = await createService();
 
-    expect(service.getVisibleCategories()).toEqual([CommandCategory.Browser]);
+    expect(service.getVisibleCategories()).toEqual([CommandCategory.Window]);
+  });
+
+  it('reads the legacy browser value as Integrated Browser', async () => {
+    __mockState.configuration['quickCommander.visibleCategories'] = ['browser'];
+    const service = await createService();
+
+    expect(service.getVisibleCategories()).toEqual([
+      CommandCategory.IntegratedBrowser,
+    ]);
   });
 });
 
@@ -311,8 +300,15 @@ describe('getAllCommands / getVisibleCommands', () => {
     const service = await createService();
 
     expect(
-      service.getVisibleCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
-    ).toEqual([BROWSER_ID, BROWSER_RIGHT_ID, GITHUB_ID, GITHUB_BROWSER_ID]);
+      service
+        .getVisibleCommandsByCategory(CommandCategory.IntegratedBrowser)
+        .map((c) => c.id)
+    ).toEqual([BROWSER_ID, BROWSER_RIGHT_ID]);
+    expect(
+      service
+        .getVisibleCommandsByCategory(CommandCategory.Repository)
+        .map((c) => c.id)
+    ).toEqual([GITHUB_ID, GITHUB_BROWSER_ID]);
     expect(
       service.getVisibleCommandsByCategory(CommandCategory.Custom)
     ).toEqual([]);
@@ -498,97 +494,14 @@ describe('favorites', () => {
   });
 });
 
-describe('execution history', () => {
-  it('is empty initially', async () => {
-    const service = await createService();
-
-    expect(service.getHistory()).toEqual([]);
-  });
-
-  it('returns the most recently executed first, not sorted by name', async () => {
-    const service = await createService();
-
-    await service.execute(BUILT_IN_COMMANDS[2]);
-    await service.execute(BUILT_IN_COMMANDS[0]);
-
-    expect(service.getHistory().map((c) => c.label)).toEqual([
-      'Duplicate As Workspace in New Window',
-      'Open Integrated Browser',
-    ]);
-  });
-
-  it('moves a re-executed command to the front (LRU)', async () => {
-    const service = await createService();
-
-    await service.execute(BUILT_IN_COMMANDS[0]);
-    await service.execute(BUILT_IN_COMMANDS[2]);
-    await service.execute(BUILT_IN_COMMANDS[0]);
-
-    expect(service.getHistory().map((c) => c.id)).toEqual([
-      DUPLICATE_ID,
-      BROWSER_ID,
-    ]);
-  });
-
-  it('does not keep more entries than historyLimit', async () => {
-    __mockState.configuration['quickCommander.historyLimit'] = 2;
-    const service = await createService();
-
-    await service.execute(BUILT_IN_COMMANDS[0]);
-    await service.execute(BUILT_IN_COMMANDS[1]);
-    await service.execute(BUILT_IN_COMMANDS[2]);
-
-    expect(service.getHistory().map((c) => c.id)).toEqual([
-      BROWSER_ID,
-      MERGE_ID,
-    ]);
-  });
-
-  it('excludes history entries for unknown command IDs', async () => {
-    const service = await createService({
-      'quickCommander.history': ['test.removed', BROWSER_ID],
-    });
-
-    expect(service.getHistory().map((c) => c.id)).toEqual([BROWSER_ID]);
-  });
-
-  it('excludes history entries for unavailable commands', async () => {
-    __mockState.availableCommands = [];
-    const service = await createService({
-      'quickCommander.history': [BROWSER_ID],
-    });
-
-    expect(service.getHistory()).toEqual([]);
-  });
-
-  it('treats an invalid stored value as empty', async () => {
-    const service = await createService({
-      'quickCommander.history': { invalid: true },
-    });
-
-    expect(service.getHistory()).toEqual([]);
-  });
-
-  it('clears the history', async () => {
-    const service = await createService();
-
-    await service.execute(BUILT_IN_COMMANDS[0]);
-    expect(service.getHistory()).toHaveLength(1);
-
-    await service.clearHistory();
-    expect(service.getHistory()).toEqual([]);
-  });
-});
-
 describe('execute', () => {
-  it('runs the command and records it in the history', async () => {
+  it('runs the command', async () => {
     const service = await createService();
 
     expect(await service.execute(BUILT_IN_COMMANDS[0])).toBe(true);
     expect(__mockState.executedCommands).toEqual([
       { command: DUPLICATE_ID, args: [] },
     ]);
-    expect(service.getHistory().map((c) => c.id)).toEqual([DUPLICATE_ID]);
   });
 
   it('passes the configured args to the command', async () => {
@@ -634,16 +547,14 @@ describe('execute', () => {
     __mockState.warningAnswer = undefined;
     expect(await service.execute(definition)).toBe(false);
     expect(__mockState.executedCommands).toHaveLength(0);
-    expect(service.getHistory()).toEqual([]);
   });
 
-  it('shows an error and skips the history when execution fails', async () => {
+  it('shows an error when execution fails', async () => {
     const service = await createService();
     __mockState.executeErrors[DUPLICATE_ID] = new Error('boom');
 
     expect(await service.execute(BUILT_IN_COMMANDS[0])).toBe(false);
     expect(__mockState.errorMessages[0]).toContain('boom');
-    expect(service.getHistory()).toEqual([]);
   });
 
   it('stringifies non-Error values thrown during execution', async () => {

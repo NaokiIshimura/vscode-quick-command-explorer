@@ -62,11 +62,6 @@
         "icon": "$(clippy)"
       },
       {
-        "command": "quickCommander.clearHistory",
-        "title": "Quick Command Explorer: Clear History",
-        "icon": "$(clear-all)"
-      },
-      {
         "command": "quickCommander.openIntegratedBrowserOnTheRight",
         "title": "Quick Command Explorer: Open Integrated Browser on the Right",
         "icon": "$(split-horizontal)"
@@ -124,11 +119,6 @@
           "command": "quickCommander.copyCommandId",
           "when": "view == quickCommander && viewItem =~ /^(command|favoriteCommand)$/",
           "group": "1_actions@1"
-        },
-        {
-          "command": "quickCommander.clearHistory",
-          "when": "view == quickCommander && viewItem == recentSection",
-          "group": "inline@1"
         }
       ]
     },
@@ -137,7 +127,7 @@
       "properties": {
         "quickCommander.groupByCategory": {
           "type": "boolean",
-          "default": false,
+          "default": true,
           "description": "Group commands by category. When disabled, commands are shown as a flat list sorted by command name in ascending order.",
           "scope": "resource"
         },
@@ -146,16 +136,18 @@
           "items": {
             "type": "string",
             "enum": [
-              "browser",
               "workspace",
               "window",
+              "integratedBrowser",
+              "repository",
               "custom"
             ]
           },
           "default": [
-            "browser",
             "workspace",
             "window",
+            "integratedBrowser",
+            "repository",
             "custom"
           ],
           "uniqueItems": true,
@@ -184,9 +176,10 @@
               "category": {
                 "type": "string",
                 "enum": [
-                  "browser",
                   "workspace",
                   "window",
+                  "integratedBrowser",
+                  "repository",
                   "custom"
                 ],
                 "default": "custom",
@@ -208,13 +201,6 @@
           },
           "scope": "resource"
         },
-        "quickCommander.historyLimit": {
-          "type": "number",
-          "default": 10,
-          "minimum": 1,
-          "description": "Number of commands to keep in Recently Used.",
-          "scope": "resource"
-        },
         "quickCommander.showUnavailableCommands": {
           "type": "boolean",
           "default": false,
@@ -225,12 +211,6 @@
           "type": "boolean",
           "default": true,
           "description": "Show the Favorites section.",
-          "scope": "resource"
-        },
-        "quickCommander.showRecentSection": {
-          "type": "boolean",
-          "default": true,
-          "description": "Show the Recently Used section.",
           "scope": "resource"
         }
       }

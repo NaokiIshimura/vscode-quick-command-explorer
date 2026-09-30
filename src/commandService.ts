@@ -12,12 +12,6 @@ export const CONFIGURATION_SECTION = 'quickCommander';
 /** globalState key holding the favorites */
 const FAVORITES_STATE_KEY = 'quickCommander.favorites';
 
-/** globalState key holding the execution history */
-const HISTORY_STATE_KEY = 'quickCommander.history';
-
-/** Default number of history entries to keep */
-const DEFAULT_HISTORY_LIMIT = 10;
-
 /**
  * Raw custom command entry as read from the settings.
  */
@@ -31,7 +25,7 @@ interface RawCustomCommand {
 }
 
 /**
- * Handles command execution, history, favorites and availability checks.
+ * Handles command execution, favorites and availability checks.
  *
  * Command arrays meant for display are always returned sorted by command name
  * in ascending order. The ordering logic lives solely in
@@ -45,7 +39,7 @@ export class CommandService {
   private lastInvalidCustomCommandSignature: string | undefined;
 
   /**
-   * @param globalState Extension global state, used to persist favorites and history
+   * @param globalState Extension global state, used to persist favorites
    */
   constructor(private readonly globalState: vscode.Memento) {}
 
@@ -61,7 +55,7 @@ export class CommandService {
    * Whether commands are grouped by category.
    */
   isGroupByCategory(): boolean {
-    return this.getConfiguration().get<boolean>('groupByCategory', false);
+    return this.getConfiguration().get<boolean>('groupByCategory', true);
   }
 
   /**
@@ -79,38 +73,15 @@ export class CommandService {
   }
 
   /**
-   * Whether the Recently Used section is shown.
-   */
-  isShowRecentSection(): boolean {
-    return this.getConfiguration().get<boolean>('showRecentSection', true);
-  }
-
-  /**
-   * Returns the number of history entries to keep.
-   * Falls back to the default when the setting is not a positive number.
-   */
-  getHistoryLimit(): number {
-    const limit = this.getConfiguration().get<number>(
-      'historyLimit',
-      DEFAULT_HISTORY_LIMIT
-    );
-
-    if (typeof limit !== 'number' || !Number.isFinite(limit) || limit <= 0) {
-      return DEFAULT_HISTORY_LIMIT;
-    }
-
-    return Math.floor(limit);
-  }
-
-  /**
    * Returns the categories to display.
    * @returns Categories to display
    */
   getVisibleCategories(): CommandCategory[] {
     const values = this.getConfiguration().get<string[]>('visibleCategories', [
-      CommandCategory.Browser,
       CommandCategory.Workspace,
       CommandCategory.Window,
+      CommandCategory.IntegratedBrowser,
+      CommandCategory.Repository,
       CommandCategory.Custom,
     ]);
 
@@ -352,61 +323,6 @@ export class CommandService {
   }
 
   /**
-   * Returns the command IDs in the execution history (most recent first).
-   * @returns Command IDs
-   */
-  private getHistoryIds(): string[] {
-    const ids = this.globalState.get<string[]>(HISTORY_STATE_KEY, []);
-
-    return Array.isArray(ids)
-      ? ids.filter((id): id is string => typeof id === 'string')
-      : [];
-  }
-
-  /**
-   * Returns the recently used commands.
-   * History is ordered by execution recency rather than by command name.
-   * @returns Commands ordered by most recent execution first
-   */
-  getHistory(): CommandDefinition[] {
-    const commandsById = new Map(
-      this.getAllCommands().map((command) => [command.id, command])
-    );
-
-    return this.getHistoryIds()
-      .map((id) => commandsById.get(id))
-      .filter(
-        (command): command is CommandDefinition =>
-          command !== undefined && this.isVisible(command)
-      )
-      .slice(0, this.getHistoryLimit());
-  }
-
-  /**
-   * Adds a command to the execution history (LRU).
-   * @param id Command ID
-   */
-  private async addToHistory(id: string): Promise<void> {
-    const historyIds = this.getHistoryIds().filter(
-      (historyId) => historyId !== id
-    );
-
-    historyIds.unshift(id);
-
-    await this.globalState.update(
-      HISTORY_STATE_KEY,
-      historyIds.slice(0, this.getHistoryLimit())
-    );
-  }
-
-  /**
-   * Clears the execution history.
-   */
-  async clearHistory(): Promise<void> {
-    await this.globalState.update(HISTORY_STATE_KEY, []);
-  }
-
-  /**
    * Executes a command.
    * Commands marked with confirm are executed only after a confirmation dialog.
    * @param definition Command definition
@@ -438,8 +354,6 @@ export class CommandService {
 
       return false;
     }
-
-    await this.addToHistory(definition.id);
 
     return true;
   }

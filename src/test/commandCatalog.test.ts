@@ -140,10 +140,14 @@ describe('findCommandById', () => {
 describe('getCommandsByCategory', () => {
   it('returns the commands of the given category', () => {
     expect(
-      getCommandsByCategory(CommandCategory.Browser).map((c) => c.id)
+      getCommandsByCategory(CommandCategory.IntegratedBrowser).map((c) => c.id)
     ).toEqual([
       'workbench.action.browser.open',
       'quickCommander.openIntegratedBrowserOnTheRight',
+    ]);
+    expect(
+      getCommandsByCategory(CommandCategory.Repository).map((c) => c.id)
+    ).toEqual([
       'quickCommander.openRepositoryOnGitHub',
       'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
     ]);

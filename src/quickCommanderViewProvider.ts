@@ -16,9 +16,9 @@ import {
 /**
  * TreeDataProvider implementation for Quick Command Explorer.
  *
- * By default it renders a flat single-level list sorted by command name in
- * ascending order. It switches to a two-level category tree only when the
- * quickCommander.groupByCategory setting is enabled.
+ * By default it renders a two-level category tree. It switches to a flat
+ * single-level list sorted by command name in ascending order when the
+ * quickCommander.groupByCategory setting is disabled.
  */
 export class QuickCommanderViewProvider
   implements vscode.TreeDataProvider<QuickCommanderTreeItem>
@@ -61,7 +61,7 @@ export class QuickCommanderViewProvider
     }
 
     if (element.kind === TreeNodeKind.Section) {
-      return this.getSectionChildren(element.section);
+      return this.toCommandTreeItems(this.commandService.getFavorites());
     }
 
     if (element.kind === TreeNodeKind.Category) {
@@ -87,13 +87,6 @@ export class QuickCommanderViewProvider
       children.push(new SectionTreeItem(SectionKind.Favorites));
     }
 
-    if (
-      this.commandService.isShowRecentSection() &&
-      this.commandService.getHistory().length > 0
-    ) {
-      children.push(new SectionTreeItem(SectionKind.Recent));
-    }
-
     if (this.commandService.isGroupByCategory()) {
       CATEGORY_ORDER.forEach((category) => {
         if (
@@ -110,20 +103,6 @@ export class QuickCommanderViewProvider
       ...children,
       ...this.toCommandTreeItems(this.commandService.getVisibleCommands()),
     ];
-  }
-
-  /**
-   * Returns the nodes under a section.
-   * @param section Section kind
-   * @returns Command nodes
-   */
-  private getSectionChildren(section: SectionKind): QuickCommanderTreeItem[] {
-    const commands =
-      section === SectionKind.Favorites
-        ? this.commandService.getFavorites()
-        : this.commandService.getHistory();
-
-    return this.toCommandTreeItems(commands);
   }
 
   /**

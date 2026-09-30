@@ -43,14 +43,14 @@ export const BUILT_IN_COMMANDS: readonly CommandDefinition[] = [
   {
     id: INTEGRATED_BROWSER_COMMAND_ID,
     label: 'Open Integrated Browser',
-    category: CommandCategory.Browser,
+    category: CommandCategory.IntegratedBrowser,
     description: 'Open the integrated browser',
     icon: 'globe',
   },
   {
     id: 'quickCommander.openIntegratedBrowserOnTheRight',
     label: 'Open Integrated Browser on the Right',
-    category: CommandCategory.Browser,
+    category: CommandCategory.IntegratedBrowser,
     description:
       'Open the integrated browser and move it to the editor group on the right',
     icon: 'split-horizontal',
@@ -62,7 +62,7 @@ export const BUILT_IN_COMMANDS: readonly CommandDefinition[] = [
   {
     id: 'quickCommander.openRepositoryOnGitHub',
     label: 'Open Repository on GitHub',
-    category: CommandCategory.Browser,
+    category: CommandCategory.Repository,
     description:
       'Open the page of the current repository remote in the external browser',
     icon: 'github',
@@ -70,7 +70,7 @@ export const BUILT_IN_COMMANDS: readonly CommandDefinition[] = [
   {
     id: 'quickCommander.openRepositoryOnGitHubInIntegratedBrowser',
     label: 'Open Repository on GitHub in Integrated Browser',
-    category: CommandCategory.Browser,
+    category: CommandCategory.Repository,
     description:
       'Open the page of the current repository remote in the integrated browser',
     icon: 'globe',

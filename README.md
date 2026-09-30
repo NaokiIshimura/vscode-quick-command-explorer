@@ -9,16 +9,16 @@ Quick Command Explorer instead lets you **pick from a list sorted by command nam
 
 ## Built-in commands
 
-Six commands ship with the extension. They are displayed **in ascending order by command name**.
+Six commands ship with the extension. They are grouped by category, and sorted **in ascending order by command name** within each category.
 
-| # | Command name | Command ID | Description |
+| Category | Command name | Command ID | Description |
 | --- | --- | --- | --- |
-| 1 | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | Duplicate the current workspace in a new window |
-| 2 | Merge All Windows | `workbench.action.mergeAllWindowTabs` | Merge all windows into one (**macOS only**) |
-| 3 | Open Integrated Browser | `workbench.action.browser.open` | Open the integrated browser |
-| 4 | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | Open the integrated browser and move it to the editor group on the right |
-| 5 | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | Open the page of the current repository remote in the external browser |
-| 6 | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | Open the same page in the integrated browser |
+| Workspace | Duplicate As Workspace in New Window | `workbench.action.duplicateWorkspaceInNewWindow` | Duplicate the current workspace in a new window |
+| Window | Merge All Windows | `workbench.action.mergeAllWindowTabs` | Merge all windows into one (**macOS only**) |
+| Integrated Browser | Open Integrated Browser | `workbench.action.browser.open` | Open the integrated browser |
+| Integrated Browser | Open Integrated Browser on the Right | `quickCommander.openIntegratedBrowserOnTheRight` | Open the integrated browser and move it to the editor group on the right |
+| Repository | Open Repository on GitHub | `quickCommander.openRepositoryOnGitHub` | Open the page of the current repository remote in the external browser |
+| Repository | Open Repository on GitHub in Integrated Browser | `quickCommander.openRepositoryOnGitHubInIntegratedBrowser` | Open the same page in the integrated browser |
 
 Use the `quickCommander.customCommands` setting to add more commands.
 
@@ -67,23 +67,22 @@ Enable `quickCommander.showUnavailableCommands` to show them anyway, marked with
 
 | Feature | Description |
 | --- | --- |
-| Command list | Flat list sorted by command name in ascending order. Click to run |
+| Command list | Grouped by category (Workspace → Window → Integrated Browser → Repository → Custom). Click to run |
 | Favorites | Starred commands are shown at the top, sorted by command name. Collapsed on startup |
-| Recently Used | Recently executed commands, **most recently executed first**. Collapsed on startup |
 | Quick search | Filter and run through a QuickPick from the `$(search)` button in the view header |
 | Custom commands | Add any command to the list through the settings |
-| Category view | Enable `groupByCategory` to switch to a grouped, two-level tree |
+| Flat view | Disable `groupByCategory` to switch to a flat list sorted by command name |
 | Copy command ID | Copy a command ID to the clipboard from the context menu |
 
 ### Ordering
 
 | Target | Order |
 | --- | --- |
-| Main command list | Ascending by command name |
+| Categories | Workspace → Window → Integrated Browser → Repository → Custom |
+| Within a category | Ascending by command name |
+| Flat view (`groupByCategory` disabled) | Ascending by command name |
 | Favorites | Ascending by command name |
-| Recently Used | Most recently executed first (history is not sorted by name) |
 | Quick search (QuickPick) | Ascending by command name |
-| Within a category in category view | Ascending by command name |
 
 The comparison pins the locale to `en`, ignores case, and compares numbers naturally (`Item 2` before `Item 10`).
 
@@ -91,13 +90,11 @@ The comparison pins the locale to `en`, ignores case, and compares numbers natur
 
 | Setting | Type | Default | Description |
 | --- | --- | --- | --- |
-| `quickCommander.groupByCategory` | boolean | `false` | Group commands by category |
+| `quickCommander.groupByCategory` | boolean | `true` | Group commands by category |
 | `quickCommander.visibleCategories` | string[] | all categories | Categories to show in the list |
 | `quickCommander.customCommands` | object[] | `[]` | Additional commands to show in the list |
-| `quickCommander.historyLimit` | number | `10` | Number of commands to keep in Recently Used |
 | `quickCommander.showUnavailableCommands` | boolean | `false` | Also show unavailable commands |
 | `quickCommander.showFavoritesSection` | boolean | `true` | Show the Favorites section |
-| `quickCommander.showRecentSection` | boolean | `true` | Show the Recently Used section |
 
 ### Adding custom commands
 
@@ -124,7 +121,7 @@ The comparison pins the locale to `en`, ignores case, and compares numbers natur
 | --- | --- | --- |
 | `id` | Yes | VSCode command ID |
 | `label` | Yes | Name shown in the list (commands are sorted by this name) |
-| `category` | | `browser` / `workspace` / `window` / `custom` (default: `custom`) |
+| `category` | | `workspace` / `window` / `integratedBrowser` / `repository` / `custom` (default: `custom`) |
 | `description` | | Additional explanation shown in the tooltip |
 | `icon` | | A [ThemeIcon](https://code.visualstudio.com/api/references/icons-in-labels) ID |
 | `args` | | Arguments passed when the command is executed |
