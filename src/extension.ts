@@ -32,11 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
   const executeCommand = vscode.commands.registerCommand(
     'quickCommander.execute',
     async (definition: CommandDefinition) => {
-      const executed = await commandService.execute(definition);
-
-      if (executed) {
-        viewProvider.refresh();
-      }
+      await commandService.execute(definition);
     }
   );
 
@@ -119,15 +115,6 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  // Register the clearHistory command
-  const clearHistoryCommand = vscode.commands.registerCommand(
-    'quickCommander.clearHistory',
-    async () => {
-      await commandService.clearHistory();
-      viewProvider.refresh();
-    }
-  );
-
   // Register the openIntegratedBrowserOnTheRight command.
   // It is a catalog command, so it is invoked through quickCommander.execute
   const openIntegratedBrowserOnTheRightCommand =
@@ -178,7 +165,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(openSettingsCommand);
   context.subscriptions.push(toggleFavoriteCommand);
   context.subscriptions.push(copyCommandIdCommand);
-  context.subscriptions.push(clearHistoryCommand);
   context.subscriptions.push(openIntegratedBrowserOnTheRightCommand);
   context.subscriptions.push(openRepositoryOnGitHubCommand);
   context.subscriptions.push(openRepositoryOnGitHubInIntegratedBrowserCommand);

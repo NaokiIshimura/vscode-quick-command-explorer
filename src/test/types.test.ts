@@ -79,19 +79,29 @@ describe('compareCommandsByLabel', () => {
 
 describe('categoryToString', () => {
   it('returns the enum value as the settings string', () => {
-    expect(categoryToString(CommandCategory.Browser)).toBe('browser');
     expect(categoryToString(CommandCategory.Workspace)).toBe('workspace');
     expect(categoryToString(CommandCategory.Window)).toBe('window');
+    expect(categoryToString(CommandCategory.IntegratedBrowser)).toBe(
+      'integratedBrowser'
+    );
+    expect(categoryToString(CommandCategory.Repository)).toBe('repository');
     expect(categoryToString(CommandCategory.Custom)).toBe('custom');
   });
 });
 
 describe('stringToCategory', () => {
   it('converts a settings string into an enum value', () => {
-    expect(stringToCategory('browser')).toBe(CommandCategory.Browser);
     expect(stringToCategory('workspace')).toBe(CommandCategory.Workspace);
     expect(stringToCategory('window')).toBe(CommandCategory.Window);
+    expect(stringToCategory('integratedBrowser')).toBe(
+      CommandCategory.IntegratedBrowser
+    );
+    expect(stringToCategory('repository')).toBe(CommandCategory.Repository);
     expect(stringToCategory('custom')).toBe(CommandCategory.Custom);
+  });
+
+  it('treats the legacy browser value as IntegratedBrowser', () => {
+    expect(stringToCategory('browser')).toBe(CommandCategory.IntegratedBrowser);
   });
 
   it('treats unknown values as Custom', () => {
@@ -101,23 +111,37 @@ describe('stringToCategory', () => {
 
 describe('getCategoryLabel', () => {
   it('returns the display label of every category', () => {
-    expect(getCategoryLabel(CommandCategory.Browser)).toBe('Browser');
     expect(getCategoryLabel(CommandCategory.Workspace)).toBe('Workspace');
     expect(getCategoryLabel(CommandCategory.Window)).toBe('Window');
+    expect(getCategoryLabel(CommandCategory.IntegratedBrowser)).toBe(
+      'Integrated Browser'
+    );
+    expect(getCategoryLabel(CommandCategory.Repository)).toBe('Repository');
     expect(getCategoryLabel(CommandCategory.Custom)).toBe('Custom');
   });
 });
 
 describe('getCategoryIcon', () => {
   it('returns the ThemeIcon ID of every category', () => {
-    expect(getCategoryIcon(CommandCategory.Browser)).toBe('globe');
     expect(getCategoryIcon(CommandCategory.Workspace)).toBe('folder-library');
     expect(getCategoryIcon(CommandCategory.Window)).toBe('multiple-windows');
+    expect(getCategoryIcon(CommandCategory.IntegratedBrowser)).toBe('globe');
+    expect(getCategoryIcon(CommandCategory.Repository)).toBe('repo');
     expect(getCategoryIcon(CommandCategory.Custom)).toBe('tools');
   });
 });
 
 describe('CATEGORY_ORDER', () => {
+  it('lists the categories in display order', () => {
+    expect(CATEGORY_ORDER).toEqual([
+      CommandCategory.Workspace,
+      CommandCategory.Window,
+      CommandCategory.IntegratedBrowser,
+      CommandCategory.Repository,
+      CommandCategory.Custom,
+    ]);
+  });
+
   it('contains every category exactly once', () => {
     expect([...CATEGORY_ORDER].sort()).toEqual(
       [...Object.values(CommandCategory)].sort()
@@ -128,13 +152,11 @@ describe('CATEGORY_ORDER', () => {
 describe('getSectionLabel', () => {
   it('returns the display label of every section', () => {
     expect(getSectionLabel(SectionKind.Favorites)).toBe('Favorites');
-    expect(getSectionLabel(SectionKind.Recent)).toBe('Recently Used');
   });
 });
 
 describe('getSectionIcon', () => {
   it('returns the ThemeIcon ID of every section', () => {
     expect(getSectionIcon(SectionKind.Favorites)).toBe('star-full');
-    expect(getSectionIcon(SectionKind.Recent)).toBe('history');
   });
 });

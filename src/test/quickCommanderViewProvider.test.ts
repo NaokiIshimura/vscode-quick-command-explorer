@@ -88,6 +88,10 @@ describe('refresh', () => {
 });
 
 describe('root (flat view)', () => {
+  beforeEach(() => {
+    __mockState.configuration['quickCommander.groupByCategory'] = false;
+  });
+
   it('returns a flat list sorted by command name', async () => {
     const { provider } = await createProvider();
     const children = provider.getChildren();
@@ -116,27 +120,7 @@ describe('root (flat view)', () => {
     expect(children).toHaveLength(7);
   });
 
-  it('shows the Recently Used section when there is history', async () => {
-    const { service, provider } = await createProvider();
-    await service.execute(BUILT_IN_COMMANDS[0]);
-    const children = provider.getChildren();
-
-    expect(children[0].label).toBe('Recently Used');
-  });
-
-  it('shows Favorites before Recently Used', async () => {
-    const { service, provider } = await createProvider({
-      'quickCommander.favorites': [BROWSER_ID],
-    });
-    await service.execute(BUILT_IN_COMMANDS[0]);
-
-    expect(labelsOf(provider.getChildren()).slice(0, 2)).toEqual([
-      'Favorites',
-      'Recently Used',
-    ]);
-  });
-
-  it('hides the sections when favorites and history are empty', async () => {
+  it('hides the Favorites section when there are no favorites', async () => {
     const { provider } = await createProvider();
 
     expect(
@@ -146,11 +130,9 @@ describe('root (flat view)', () => {
 
   it('hides sections disabled through the settings', async () => {
     __mockState.configuration['quickCommander.showFavoritesSection'] = false;
-    __mockState.configuration['quickCommander.showRecentSection'] = false;
-    const { service, provider } = await createProvider({
+    const { provider } = await createProvider({
       'quickCommander.favorites': [BROWSER_ID],
     });
-    await service.execute(BUILT_IN_COMMANDS[0]);
 
     expect(
       provider.getChildren().some((child) => child instanceof SectionTreeItem)
@@ -218,10 +200,6 @@ describe('root (flat view)', () => {
 });
 
 describe('root (category view)', () => {
-  beforeEach(() => {
-    __mockState.configuration['quickCommander.groupByCategory'] = true;
-  });
-
   it('shows only the categories that have commands', async () => {
     const { provider } = await createProvider();
     const children = provider.getChildren();
@@ -229,7 +207,12 @@ describe('root (category view)', () => {
     expect(children.every((child) => child instanceof CategoryTreeItem)).toBe(
       true
     );
-    expect(labelsOf(children)).toEqual(['Browser', 'Workspace', 'Window']);
+    expect(labelsOf(children)).toEqual([
+      'Workspace',
+      'Window',
+      'Integrated Browser',
+      'Repository',
+    ]);
   });
 
   it('shows the sections before the categories', async () => {
@@ -239,23 +222,27 @@ describe('root (category view)', () => {
 
     expect(labelsOf(provider.getChildren())).toEqual([
       'Favorites',
-      'Browser',
       'Workspace',
       'Window',
+      'Integrated Browser',
+      'Repository',
     ]);
   });
 
   it('returns the commands under a category', async () => {
     const { provider } = await createProvider();
-    const category = new CategoryTreeItem(
-      (provider.getChildren()[0] as CategoryTreeItem).category
-    );
+    const categories = provider.getChildren() as CategoryTreeItem[];
 
-    expect(labelsOf(provider.getChildren(category))).toEqual([
-      'Open Integrated Browser',
-      'Open Integrated Browser on the Right',
-      'Open Repository on GitHub',
-      'Open Repository on GitHub in Integrated Browser',
+    expect(
+      categories.map((category) => labelsOf(provider.getChildren(category)))
+    ).toEqual([
+      ['Duplicate As Workspace in New Window'],
+      ['Merge All Windows'],
+      ['Open Integrated Browser', 'Open Integrated Browser on the Right'],
+      [
+        'Open Repository on GitHub',
+        'Open Repository on GitHub in Integrated Browser',
+      ],
     ]);
   });
 
@@ -273,12 +260,13 @@ describe('root (category view)', () => {
     const children = provider.getChildren() as CategoryTreeItem[];
 
     expect(labelsOf(children)).toEqual([
-      'Browser',
       'Workspace',
       'Window',
+      'Integrated Browser',
+      'Repository',
       'Custom',
     ]);
-    expect(labelsOf(provider.getChildren(children[3]))).toEqual([
+    expect(labelsOf(provider.getChildren(children[4]))).toEqual([
       'Add Folder to Workspace',
       'Zen Mode',
     ]);
@@ -311,21 +299,11 @@ describe('section children', () => {
     expect(children[0].contextValue).toBe('favoriteCommand');
   });
 
-  it('returns the Recently Used children most recently executed first', async () => {
-    const { service, provider } = await createProvider();
-    await service.execute(BUILT_IN_COMMANDS[2]);
-    await service.execute(BUILT_IN_COMMANDS[0]);
-    const section = new SectionTreeItem(SectionKind.Recent);
-
-    expect(labelsOf(provider.getChildren(section))).toEqual([
-      'Duplicate As Workspace in New Window',
-      'Open Integrated Browser',
-    ]);
-  });
 });
 
 describe('command node children', () => {
   it('has no children', async () => {
+    __mockState.configuration['quickCommander.groupByCategory'] = false;
     const { provider } = await createProvider();
     const command = provider.getChildren()[0];
 

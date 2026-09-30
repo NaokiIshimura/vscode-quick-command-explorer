@@ -4,15 +4,23 @@
  * quickCommander.visibleCategories setting.
  */
 export enum CommandCategory {
-  /** Browser related */
-  Browser = 'browser',
   /** Workspace related */
   Workspace = 'workspace',
   /** Window related */
   Window = 'window',
+  /** Integrated browser related */
+  IntegratedBrowser = 'integratedBrowser',
+  /** Repository related */
+  Repository = 'repository',
   /** Commands added by the user through settings */
   Custom = 'custom',
 }
+
+/**
+ * Legacy settings string of the integrated browser category.
+ * Still accepted so settings written before the category was renamed keep working.
+ */
+const LEGACY_BROWSER_CATEGORY = 'browser';
 
 /**
  * Section headings shown at the top of the tree.
@@ -21,15 +29,13 @@ export enum CommandCategory {
 export enum SectionKind {
   /** Favorites */
   Favorites = 'favorites',
-  /** Recently used commands */
-  Recent = 'recent',
 }
 
 /**
  * Kind of a tree node.
  */
 export enum TreeNodeKind {
-  /** Section heading (Favorites / Recently Used) */
+  /** Section heading (Favorites) */
   Section = 'section',
   /** Category heading (only when groupByCategory is enabled) */
   Category = 'category',
@@ -100,18 +106,22 @@ export function categoryToString(category: CommandCategory): string {
 
 /**
  * Converts a settings string to a CommandCategory enum value.
- * Unknown values are treated as Custom.
+ * The legacy value 'browser' is treated as IntegratedBrowser, and unknown
+ * values are treated as Custom.
  * @param value Settings string
  * @returns CommandCategory enum value
  */
 export function stringToCategory(value: string): CommandCategory {
   switch (value) {
-    case CommandCategory.Browser:
-      return CommandCategory.Browser;
     case CommandCategory.Workspace:
       return CommandCategory.Workspace;
     case CommandCategory.Window:
       return CommandCategory.Window;
+    case CommandCategory.IntegratedBrowser:
+    case LEGACY_BROWSER_CATEGORY:
+      return CommandCategory.IntegratedBrowser;
+    case CommandCategory.Repository:
+      return CommandCategory.Repository;
     case CommandCategory.Custom:
     default:
       return CommandCategory.Custom;
@@ -125,12 +135,14 @@ export function stringToCategory(value: string): CommandCategory {
  */
 export function getCategoryLabel(category: CommandCategory): string {
   switch (category) {
-    case CommandCategory.Browser:
-      return 'Browser';
     case CommandCategory.Workspace:
       return 'Workspace';
     case CommandCategory.Window:
       return 'Window';
+    case CommandCategory.IntegratedBrowser:
+      return 'Integrated Browser';
+    case CommandCategory.Repository:
+      return 'Repository';
     case CommandCategory.Custom:
       return 'Custom';
   }
@@ -143,12 +155,14 @@ export function getCategoryLabel(category: CommandCategory): string {
  */
 export function getCategoryIcon(category: CommandCategory): string {
   switch (category) {
-    case CommandCategory.Browser:
-      return 'globe';
     case CommandCategory.Workspace:
       return 'folder-library';
     case CommandCategory.Window:
       return 'multiple-windows';
+    case CommandCategory.IntegratedBrowser:
+      return 'globe';
+    case CommandCategory.Repository:
+      return 'repo';
     case CommandCategory.Custom:
       return 'tools';
   }
@@ -158,9 +172,10 @@ export function getCategoryIcon(category: CommandCategory): string {
  * Display order of the category headings when groupByCategory is enabled.
  */
 export const CATEGORY_ORDER: readonly CommandCategory[] = [
-  CommandCategory.Browser,
   CommandCategory.Workspace,
   CommandCategory.Window,
+  CommandCategory.IntegratedBrowser,
+  CommandCategory.Repository,
   CommandCategory.Custom,
 ];
 
@@ -173,8 +188,6 @@ export function getSectionLabel(section: SectionKind): string {
   switch (section) {
     case SectionKind.Favorites:
       return 'Favorites';
-    case SectionKind.Recent:
-      return 'Recently Used';
   }
 }
 
@@ -187,7 +200,5 @@ export function getSectionIcon(section: SectionKind): string {
   switch (section) {
     case SectionKind.Favorites:
       return 'star-full';
-    case SectionKind.Recent:
-      return 'history';
   }
 }

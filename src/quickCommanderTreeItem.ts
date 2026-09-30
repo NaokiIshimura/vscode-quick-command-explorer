@@ -11,8 +11,8 @@ import {
 } from './types';
 
 /**
- * Tree item for a section heading (Favorites / Recently Used).
- * The section starts collapsed so the flat command list stays visible
+ * Tree item for a section heading (Favorites).
+ * The section starts collapsed so the command list stays visible
  * right after the extension is activated.
  */
 export class SectionTreeItem extends vscode.TreeItem {
@@ -26,8 +26,7 @@ export class SectionTreeItem extends vscode.TreeItem {
     super(getSectionLabel(section), vscode.TreeItemCollapsibleState.Collapsed);
 
     this.iconPath = new vscode.ThemeIcon(getSectionIcon(section));
-    this.contextValue =
-      section === SectionKind.Recent ? 'recentSection' : 'favoritesSection';
+    this.contextValue = 'favoritesSection';
   }
 }
 

@@ -6,7 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Quick Command Explorer is a VSCode extension that lists frequently used VSCode commands in the
 Explorer sidebar and runs them with a single click.
-Commands are displayed as a flat list sorted by **command name in ascending order**.
+Commands are grouped by category (Workspace → Window → Integrated Browser → Repository → Custom)
+and sorted by **command name in ascending order** within each category.
 
 ## Development Commands
 
@@ -68,22 +69,21 @@ project, Quick Explorer.
      - `quickCommander.openSettings`: open the settings page
      - `quickCommander.toggleFavorite`: add or remove a favorite
      - `quickCommander.copyCommandId`: copy a command ID to the clipboard
-     - `quickCommander.clearHistory`: clear the execution history
      - `quickCommander.openIntegratedBrowserOnTheRight`: open the integrated browser and move it
        to the editor group on the right
      - `quickCommander.openRepositoryOnGitHub`: open the page of the current repository remote in the external browser
      - `quickCommander.openRepositoryOnGitHubInIntegratedBrowser`: open the same page in the integrated browser
 
 2. **QuickCommanderViewProvider** - TreeDataProvider implementation
-   - Renders a **flat single-level list** by default, sorted by command name in ascending order
-   - Switches to a two-level category tree only when `quickCommander.groupByCategory` is enabled
-   - Hides the `Favorites` and `Recently Used` sections when they are empty
-   - Renders the `Favorites` and `Recently Used` sections collapsed on startup
+   - Renders a **two-level category tree** by default, in the order of `CATEGORY_ORDER`
+   - Switches to a flat single-level list sorted by command name when
+     `quickCommander.groupByCategory` is disabled
+   - Hides the `Favorites` section when it is empty
+   - Renders the `Favorites` section collapsed on startup
    - Owns the refresh notification (EventEmitter)
 
 3. **CommandService** - Domain logic
    - Command execution (commands marked with `confirm` go through a confirmation dialog)
-   - Execution history, kept in `globalState` as an LRU list
    - Favorites, kept in `globalState`
    - Availability checks using `vscode.commands.getCommands(true)`, `process.platform` and the
      `requires` field (commands this extension contributes itself always have their own ID
@@ -92,8 +92,8 @@ project, Quick Explorer.
 
 4. **quickCommanderTreeItem.ts** - Concrete tree items
    - `CommandTreeItem`: a command; clicking it runs `quickCommander.execute`
-   - `SectionTreeItem`: the `Favorites` / `Recently Used` headings, collapsed by default
-   - `CategoryTreeItem`: a category heading (only when `groupByCategory` is enabled)
+   - `SectionTreeItem`: the `Favorites` heading, collapsed by default
+   - `CategoryTreeItem`: a category heading (only when `groupByCategory` is enabled, which is the default)
 
 5. **commandCatalog.ts** - Built-in command definitions
    - `BUILT_IN_COMMANDS` is written in ascending order by command name
@@ -119,6 +119,8 @@ project, Quick Explorer.
    - `CommandCategory` / `SectionKind` / `TreeNodeKind` enums
    - `CommandDefinition` interface
    - `compareCommandsByLabel()`: **the single definition of the ordering**
+   - `CATEGORY_ORDER`: display order of the category headings
+   - `stringToCategory()` still reads the legacy `browser` settings value as `IntegratedBrowser`
 
 ### Data flow
 
@@ -128,10 +130,6 @@ User Click
     → Extension.registerCommand('quickCommander.execute')
       → CommandService.execute()
         → vscode.commands.executeCommand()
-        → CommandService.addToHistory()
-          → ViewProvider.refresh()
-            → TreeDataProvider.onDidChangeTreeData.fire()
-              → VSCode updates TreeView
 ```
 
 ### Key design decisions
@@ -140,8 +138,6 @@ User Click
   Sorting separately in the tree, the QuickPick and the favorites would let the behaviour
   drift apart, so `CommandService.getVisibleCommands()` is the single source of truth for
   the displayed list
-- **`Recently Used` is the only list ordered by recency**
-  History would lose its meaning if it were sorted by command name
 - **Locale-independent comparison**
   `localeCompare` is called with an explicit `'en'` so tests do not depend on the runtime
   locale. `sensitivity: 'base'` ignores case, `numeric: true` compares numbers naturally,

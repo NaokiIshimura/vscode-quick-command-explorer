@@ -10,7 +10,7 @@ import { CommandCategory, CommandDefinition, SectionKind, TreeNodeKind } from '.
 const DEFINITION: CommandDefinition = {
   id: 'workbench.action.browser.open',
   label: 'Open Integrated Browser',
-  category: CommandCategory.Browser,
+  category: CommandCategory.IntegratedBrowser,
   description: 'Open the integrated browser',
   icon: 'globe',
 };
@@ -68,7 +68,7 @@ describe('CommandTreeItem', () => {
         'Open Integrated Browser',
         'Open the integrated browser',
         'ID: workbench.action.browser.open',
-        'Category: Browser',
+        'Category: Integrated Browser',
       ].join('\n')
     );
   });
@@ -84,7 +84,7 @@ describe('CommandTreeItem', () => {
       [
         'Open Integrated Browser',
         'ID: workbench.action.browser.open',
-        'Category: Browser',
+        'Category: Integrated Browser',
       ].join('\n')
     );
   });
@@ -102,14 +102,6 @@ describe('SectionTreeItem', () => {
     expect(item.collapsibleState).toBe(TreeItemCollapsibleState.Collapsed);
   });
 
-  it('creates the Recently Used section', () => {
-    const item = new SectionTreeItem(SectionKind.Recent);
-
-    expect(item.label).toBe('Recently Used');
-    expect(item.contextValue).toBe('recentSection');
-    expect((item.iconPath as ThemeIcon).id).toBe('history');
-    expect(item.collapsibleState).toBe(TreeItemCollapsibleState.Collapsed);
-  });
 });
 
 describe('CategoryTreeItem', () => {
