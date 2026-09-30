@@ -194,3 +194,13 @@ through a reusable workflow:
 - `.github/workflows/publish-marketplace.yml` - runs on the same events; downloads the
   built artifact and publishes it with `vsce publish`. It needs the `VSCE_PAT` repository
   secret; when the secret is missing the publishing step is skipped instead of failing
+
+### Version bump
+
+The workflows do not assign version numbers, so the version has to be bumped by hand:
+
+- **Bump `version` in `package.json` whenever you create a pull request** (e.g. `0.0.6` → `0.0.7`)
+  - Include the bump in the same commit / PR as the change itself
+  - Prefix the PR title with the new version, e.g. `v0.0.7: ...`
+  - `package-lock.json` is ignored by git, so it does not need updating
+- Forgetting the bump makes the release workflow upload a VSIX with the same version as the previous release
