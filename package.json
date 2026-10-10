@@ -1,8 +1,8 @@
 {
   "name": "quick-command-explorer",
-  "displayName": "Quick Command Explorer",
+  "displayName": "nacn Commander",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "publisher": "nacn",
   "repository": {
     "type": "git",
@@ -27,53 +27,53 @@
       "explorer": [
         {
           "id": "quickCommander",
-          "name": "Quick Command Explorer"
+          "name": "nacn Commander"
         }
       ]
     },
     "commands": [
       {
         "command": "quickCommander.execute",
-        "title": "Quick Command Explorer: Execute Command"
+        "title": "nacn Commander: Execute Command"
       },
       {
         "command": "quickCommander.refresh",
-        "title": "Quick Command Explorer: Refresh",
+        "title": "nacn Commander: Refresh",
         "icon": "$(refresh)"
       },
       {
         "command": "quickCommander.search",
-        "title": "Quick Command Explorer: Search Commands",
+        "title": "nacn Commander: Search Commands",
         "icon": "$(search)"
       },
       {
         "command": "quickCommander.openSettings",
-        "title": "Quick Command Explorer: Open Settings",
+        "title": "nacn Commander: Open Settings",
         "icon": "$(gear)"
       },
       {
         "command": "quickCommander.toggleFavorite",
-        "title": "Quick Command Explorer: Toggle Favorite",
+        "title": "nacn Commander: Toggle Favorite",
         "icon": "$(star)"
       },
       {
         "command": "quickCommander.copyCommandId",
-        "title": "Quick Command Explorer: Copy Command ID",
+        "title": "nacn Commander: Copy Command ID",
         "icon": "$(clippy)"
       },
       {
         "command": "quickCommander.openIntegratedBrowserOnTheRight",
-        "title": "Quick Command Explorer: Open Integrated Browser on the Right",
+        "title": "nacn Commander: Open Integrated Browser on the Right",
         "icon": "$(split-horizontal)"
       },
       {
         "command": "quickCommander.openRepositoryOnGitHub",
-        "title": "Quick Command Explorer: Open Repository on GitHub",
+        "title": "nacn Commander: Open Repository on GitHub",
         "icon": "$(github)"
       },
       {
         "command": "quickCommander.openRepositoryOnGitHubInIntegratedBrowser",
-        "title": "Quick Command Explorer: Open Repository on GitHub in Integrated Browser",
+        "title": "nacn Commander: Open Repository on GitHub in Integrated Browser",
         "icon": "$(globe)"
       }
     ],
@@ -123,7 +123,7 @@
       ]
     },
     "configuration": {
-      "title": "Quick Command Explorer",
+      "title": "nacn Commander",
       "properties": {
         "quickCommander.groupByCategory": {
           "type": "boolean",

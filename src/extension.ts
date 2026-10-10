@@ -14,7 +14,7 @@ import { CommandDefinition } from './types';
  * @param context Extension context
  */
 export function activate(context: vscode.ExtensionContext) {
-  console.log('Quick Command Explorer extension is now active');
+  console.log('nacn Commander extension is now active');
 
   // Create the command service
   const commandService = new CommandService(context.globalState);
@@ -53,7 +53,7 @@ export function activate(context: vscode.ExtensionContext) {
 
       if (commands.length === 0) {
         vscode.window.showInformationMessage(
-          'Quick Command Explorer: no commands to show'
+          'nacn Commander: no commands to show'
         );
         return;
       }
@@ -144,7 +144,7 @@ export function activate(context: vscode.ExtensionContext) {
     .refreshAvailableCommands()
     .then(() => viewProvider.refresh())
     .catch((error) => {
-      console.error('Quick Command Explorer: failed to load command list', error);
+      console.error('nacn Commander: failed to load command list', error);
       viewProvider.refresh();
     });
 
@@ -175,5 +175,5 @@ export function activate(context: vscode.ExtensionContext) {
  * Called when the extension is deactivated.
  */
 export function deactivate() {
-  console.log('Quick Command Explorer extension is now deactivated');
+  console.log('nacn Commander extension is now deactivated');
 }
