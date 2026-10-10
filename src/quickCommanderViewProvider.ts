@@ -14,7 +14,7 @@ import {
 } from './types';
 
 /**
- * TreeDataProvider implementation for Quick Command Explorer.
+ * TreeDataProvider implementation for nacn Commander.
  *
  * By default it renders a two-level category tree. It switches to a flat
  * single-level list sorted by command name in ascending order when the

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Quick Command Explorer is a VSCode extension that lists frequently used VSCode commands in the
+nacn Commander is a VSCode extension that lists frequently used VSCode commands in the
 Explorer sidebar and runs them with a single click.
 Commands are grouped by category (Workspace → Window → Integrated Browser → Repository → Custom)
 and sorted by **command name in ascending order** within each category.
@@ -163,6 +163,7 @@ User Click
 - TypeScript sources live under `src/`
 - Test files live under `src/test/`
 - Compiled JavaScript is emitted to `out/`
+- The extension icon is `images/icon.png` (256×256 PNG), referenced by `icon` in `package.json`
 
 ### Test setup
 - **Framework**: Vitest
