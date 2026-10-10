@@ -163,6 +163,7 @@ User Click
 - TypeScript sources live under `src/`
 - Test files live under `src/test/`
 - Compiled JavaScript is emitted to `out/`
+- The extension icon is `images/icon.png` (256×256 PNG), referenced by `icon` in `package.json`
 
 ### Test setup
 - **Framework**: Vitest
