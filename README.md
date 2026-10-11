@@ -7,6 +7,8 @@ A VSCode extension that lists frequently used VSCode commands in the Explorer si
 The Command Palette (`Cmd+Shift+P`) assumes you already remember the command name.
 nacn Commander instead lets you **pick from a list sorted by command name in ascending order**, making commands easier to discover and faster to run.
 
+![nacn Commander in the Explorer sidebar](images/screenshot.png)
+
 ## Built-in commands
 
 Six commands ship with the extension. They are grouped by category, and sorted **in ascending order by command name** within each category.

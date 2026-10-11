@@ -2,7 +2,7 @@
   "name": "quick-command-explorer",
   "displayName": "nacn Commander",
   "description": "List and run frequently used VSCode commands from the Explorer sidebar",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "publisher": "nacn",
   "icon": "images/icon.png",
   "repository": {
